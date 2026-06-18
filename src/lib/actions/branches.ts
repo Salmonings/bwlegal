@@ -20,7 +20,10 @@ export async function createBranchAction(formData: FormData) {
     .select("id")
     .single();
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "branch.create",
@@ -44,7 +47,10 @@ export async function renameBranchAction(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.from("branches").update({ name }).eq("id", branchId);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "branch.update",

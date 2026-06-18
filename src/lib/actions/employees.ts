@@ -33,7 +33,10 @@ export async function createEmployeeAction(formData: FormData) {
     .select("id")
     .single();
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "employee.create",
@@ -66,7 +69,10 @@ export async function updateEmployeeAction(formData: FormData) {
     .update({ full_name: fullName, title })
     .eq("id", employeeId);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "employee.update",
@@ -98,7 +104,10 @@ export async function setEmployeeActiveAction(formData: FormData) {
     .update({ is_active: isActive })
     .eq("id", employeeId);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: isActive ? "employee.reactivate" : "employee.deactivate",

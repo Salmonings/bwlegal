@@ -32,7 +32,10 @@ export async function createEmployeeDocumentTypeAction(formData: FormData) {
     .select("id")
     .single();
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "employee_document_type.create",
@@ -63,7 +66,10 @@ export async function updateEmployeeDocumentTypeAction(formData: FormData) {
     })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "employee_document_type.update",
@@ -89,7 +95,10 @@ export async function setEmployeeDocumentTypeActiveAction(formData: FormData) {
     .update({ is_active: isActive })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: isActive ? "employee_document_type.activate" : "employee_document_type.deactivate",

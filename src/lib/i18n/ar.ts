@@ -108,11 +108,14 @@ export const ar = {
   errorNoEmployeeAccess: "لا تملك صلاحية الوصول لهذا الموظف.",
   errorFileTooLarge: "حجم الملف أكبر من 15 ميغابايت.",
   errorInvalidFileType: "يُسمح فقط بملفات PDF و JPG و PNG.",
-  errorUploadFailed: "فشل رفع الملف",
+  errorUploadFailed: "فشل رفع الملف. حاول مرة أخرى.",
   errorEmailNameRequired: "البريد الإلكتروني والاسم مطلوبان.",
   errorInvalidRole: "دور غير صالح.",
   errorBranchRequiredForManager: "الفرع مطلوب لمدير الفرع.",
   errorCannotRemoveOwnAccount: "لا يمكنك إزالة حسابك الخاص.",
+  errorGeneric: "حدث خطأ غير متوقع. حاول مرة أخرى.",
+  errorInvalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  errorEmailAlreadyRegistered: "هذا البريد الإلكتروني مستخدم بالفعل.",
 };
 
 export type Dictionary = typeof ar;

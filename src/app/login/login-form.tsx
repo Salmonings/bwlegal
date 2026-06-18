@@ -21,7 +21,10 @@ export function LoginForm({ redirectTo, t }: { redirectTo: string; t: Dictionary
     const { error } = await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
-      setError(error.message);
+      console.error(error);
+      setError(
+        error.message.includes("Invalid login credentials") ? t.errorInvalidCredentials : t.errorGeneric
+      );
       setLoading(false);
       return;
     }

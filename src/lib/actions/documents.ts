@@ -56,7 +56,8 @@ export async function saveDocumentAction(formData: FormData) {
       .upload(path, file, { contentType: file.type });
 
     if (uploadError) {
-      return { error: `${t.errorUploadFailed}: ${uploadError.message}` };
+      console.error(uploadError);
+      return { error: t.errorUploadFailed };
     }
 
     filePath = path;
@@ -80,7 +81,10 @@ export async function saveDocumentAction(formData: FormData) {
       .select("id")
       .single();
 
-    if (error) return { error: error.message };
+    if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
     await logAudit(supabase, profile.id, {
       action: "document.replace",
@@ -99,7 +103,10 @@ export async function saveDocumentAction(formData: FormData) {
       })
       .eq("id", existingDocumentId);
 
-    if (error) return { error: error.message };
+    if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
     await logAudit(supabase, profile.id, {
       action: "document.update",
@@ -122,7 +129,10 @@ export async function saveDocumentAction(formData: FormData) {
       .select("id")
       .single();
 
-    if (error) return { error: error.message };
+    if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
     await logAudit(supabase, profile.id, {
       action: "document.create",

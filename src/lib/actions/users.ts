@@ -43,7 +43,13 @@ export async function createUserAction(formData: FormData) {
     },
   });
 
-  if (error) return { error: error.message, tempPassword: null };
+  if (error) {
+    console.error(error);
+    if (error.message.includes("already been registered")) {
+      return { error: t.errorEmailAlreadyRegistered, tempPassword: null };
+    }
+    return { error: t.errorGeneric, tempPassword: null };
+  }
 
   const supabase = await createClient();
   await logAudit(supabase, profile.id, {
@@ -82,7 +88,10 @@ export async function updateUserAction(formData: FormData) {
     })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) {
+    console.error(error);
+    return { error: t.errorGeneric };
+  }
 
   await logAudit(supabase, profile.id, {
     action: "user.update",
@@ -104,7 +113,10 @@ export async function removeUserAction(formData: FormData) {
 
   const admin = createAdminClient();
   const { error } = await admin.auth.admin.deleteUser(id);
-  if (error) return { error: error.message };
+  if (error) {
+    console.error(error);
+    return { error: t.errorGeneric };
+  }
 
   const supabase = await createClient();
   await logAudit(supabase, profile.id, {

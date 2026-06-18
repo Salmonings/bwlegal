@@ -32,7 +32,10 @@ export async function createDocumentTypeAction(formData: FormData) {
     .select("id")
     .single();
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "document_type.create",
@@ -63,7 +66,10 @@ export async function updateDocumentTypeAction(formData: FormData) {
     })
     .eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: "document_type.update",
@@ -86,7 +92,10 @@ export async function setDocumentTypeActiveAction(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.from("document_types").update({ is_active: isActive }).eq("id", id);
 
-  if (error) return { error: error.message };
+  if (error) {
+      console.error(error);
+      return { error: t.errorGeneric };
+    }
 
   await logAudit(supabase, profile.id, {
     action: isActive ? "document_type.activate" : "document_type.deactivate",
