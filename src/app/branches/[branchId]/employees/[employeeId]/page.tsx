@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { LanguageToggle } from "@/components/language-toggle";
 import { EmployeeChecklist } from "@/components/employee-checklist";
+import { getDictionary, backArrow } from "@/lib/i18n";
 
 export default async function EmployeeDetailPage({
   params,
@@ -18,6 +20,7 @@ export default async function EmployeeDetailPage({
     redirect("/");
   }
 
+  const { locale, t } = await getDictionary();
   const supabase = await createClient();
   const { data: employee } = await supabase
     .from("employees")
@@ -28,20 +31,23 @@ export default async function EmployeeDetailPage({
   if (!employee || employee.branch_id !== branchId) redirect(`/branches/${branchId}/employees`);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+    <div className="min-h-screen bg-cream">
+      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
         <div>
-          <Link href={`/branches/${branchId}/employees`} className="text-xs text-gray-400 hover:text-gray-600">
-            &larr; Employees
+          <Link href={`/branches/${branchId}/employees`} className="text-xs text-muted hover:text-orange">
+            {backArrow(locale)} {t.employees}
           </Link>
-          <h1 className="text-lg font-semibold text-gray-900">{employee.full_name}</h1>
-          {employee.title && <p className="text-sm text-gray-500">{employee.title}</p>}
+          <h1 className="text-lg font-bold text-ink">{employee.full_name}</h1>
+          {employee.title && <p className="text-sm text-muted">{employee.title}</p>}
         </div>
-        <LogoutButton />
+        <div className="flex items-center gap-3">
+          <LanguageToggle locale={locale} />
+          <LogoutButton label={t.logout} />
+        </div>
       </header>
 
       <main className="p-6">
-        <EmployeeChecklist branchId={branchId} employeeId={employeeId} canEdit />
+        <EmployeeChecklist branchId={branchId} employeeId={employeeId} canEdit t={t} />
       </main>
     </div>
   );

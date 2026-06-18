@@ -3,7 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { LanguageToggle } from "@/components/language-toggle";
 import { EmployeeList } from "@/components/employee-list";
+import { getDictionary, backArrow } from "@/lib/i18n";
 
 export default async function EmployeesPage({
   params,
@@ -18,25 +20,31 @@ export default async function EmployeesPage({
     redirect("/");
   }
 
+  const { locale, t } = await getDictionary();
   const supabase = await createClient();
   const { data: branch } = await supabase.from("branches").select("name").eq("id", branchId).single();
 
   if (!branch) redirect("/");
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+    <div className="min-h-screen bg-cream">
+      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
         <div>
-          <Link href={`/branches/${branchId}`} className="text-xs text-gray-400 hover:text-gray-600">
-            &larr; {branch.name}
+          <Link href={`/branches/${branchId}`} className="text-xs text-muted hover:text-orange">
+            {backArrow(locale)} {branch.name}
           </Link>
-          <h1 className="text-lg font-semibold text-gray-900">{branch.name} — Employees</h1>
+          <h1 className="text-lg font-bold text-ink">
+            {branch.name} &mdash; {t.employees}
+          </h1>
         </div>
-        <LogoutButton />
+        <div className="flex items-center gap-3">
+          <LanguageToggle locale={locale} />
+          <LogoutButton label={t.logout} />
+        </div>
       </header>
 
       <main className="p-6">
-        <EmployeeList branchId={branchId} canEdit />
+        <EmployeeList branchId={branchId} canEdit t={t} />
       </main>
     </div>
   );

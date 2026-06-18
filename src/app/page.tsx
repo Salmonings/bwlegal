@@ -3,57 +3,70 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
+import { LanguageToggle } from "@/components/language-toggle";
 import { BranchChecklist } from "@/components/branch-checklist";
 import { ComplianceMatrix } from "@/components/compliance-matrix";
 import { IssueCountBadge } from "@/components/issue-count-badge";
+import { getDictionary, type Locale } from "@/lib/i18n";
+import type { Dictionary } from "@/lib/i18n/en";
 
 export default async function DashboardPage() {
   const profile = await getCurrentProfile();
   if (!profile) redirect("/login");
+  const { locale, t } = await getDictionary();
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+    <div className="min-h-screen bg-cream">
+      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
         <div className="flex items-center gap-2">
           <div>
-            <h1 className="text-lg font-semibold text-gray-900">Branch Compliance</h1>
-            <p className="text-sm text-gray-500">
-              {profile.full_name} &middot; {profile.role === "legal_admin" ? "Legal Admin" : "Branch Manager"}
+            <h1 className="text-lg font-bold text-orange">{t.appName}</h1>
+            <p className="text-sm text-muted">
+              {profile.full_name} &middot; {profile.role === "legal_admin" ? t.legalAdmin : t.branchManager}
             </p>
           </div>
           <IssueCountBadge branchId={profile.role === "branch_manager" ? profile.branch_id ?? undefined : undefined} />
         </div>
         <div className="flex items-center gap-3">
           {profile.role === "legal_admin" && (
-            <Link href="/settings" className="text-sm font-medium text-gray-600 hover:text-gray-900">
-              Settings
+            <Link href="/settings" className="text-sm font-medium text-ink hover:text-orange">
+              {t.settings}
             </Link>
           )}
-          <LogoutButton />
+          <LanguageToggle locale={locale} />
+          <LogoutButton label={t.logout} />
         </div>
       </header>
 
       <main className="p-6">
         {profile.role === "legal_admin" ? (
-          <AdminDashboard />
+          <AdminDashboard t={t} />
         ) : (
-          <BranchManagerDashboard branchId={profile.branch_id!} />
+          <BranchManagerDashboard branchId={profile.branch_id!} t={t} locale={locale} />
         )}
       </main>
     </div>
   );
 }
 
-async function AdminDashboard() {
+async function AdminDashboard({ t }: { t: Dictionary }) {
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-base font-medium text-gray-900">Compliance matrix</h2>
-      <ComplianceMatrix />
+      <h2 className="text-base font-semibold text-ink">{t.complianceMatrix}</h2>
+      <ComplianceMatrix t={t} />
     </div>
   );
 }
 
-async function BranchManagerDashboard({ branchId }: { branchId: string }) {
+async function BranchManagerDashboard({
+  branchId,
+  t,
+  locale,
+}: {
+  branchId: string;
+  t: Dictionary;
+  locale: Locale;
+}) {
   const supabase = await createClient();
   const { data: branch } = await supabase
     .from("branches")
@@ -63,8 +76,10 @@ async function BranchManagerDashboard({ branchId }: { branchId: string }) {
 
   return (
     <div className="flex flex-col gap-4">
-      <h2 className="text-base font-medium text-gray-900">{branch?.name} — compliance checklist</h2>
-      <BranchChecklist branchId={branchId} canEdit />
+      <h2 className="text-base font-semibold text-ink">
+        {branch?.name} &mdash; {t.complianceChecklist}
+      </h2>
+      <BranchChecklist branchId={branchId} canEdit t={t} locale={locale} />
     </div>
   );
 }

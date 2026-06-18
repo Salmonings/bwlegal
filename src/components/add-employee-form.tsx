@@ -2,6 +2,7 @@
 
 import { useActionState, useRef } from "react";
 import { createEmployeeAction } from "@/lib/actions/employees";
+import type { Dictionary } from "@/lib/i18n/en";
 
 type ActionState = { error: string | null };
 
@@ -9,7 +10,7 @@ async function action(_prev: ActionState, formData: FormData): Promise<ActionSta
   return createEmployeeAction(formData);
 }
 
-export function AddEmployeeForm({ branchId }: { branchId: string }) {
+export function AddEmployeeForm({ branchId, t }: { branchId: string; t: Dictionary }) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(action, {
     error: null,
   });
@@ -22,27 +23,23 @@ export function AddEmployeeForm({ branchId }: { branchId: string }) {
         await formAction(formData);
         formRef.current?.reset();
       }}
-      className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+      className="flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm"
     >
       <input type="hidden" name="branchId" value={branchId} />
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-gray-500">Name</label>
-        <input
-          name="fullName"
-          required
-          className="rounded border border-gray-300 px-2 py-1 text-sm"
-        />
+        <label className="text-xs font-medium text-muted">{t.name}</label>
+        <input name="fullName" required className="rounded-lg border border-line px-2 py-1 text-sm" />
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-gray-500">Title</label>
-        <input name="title" className="rounded border border-gray-300 px-2 py-1 text-sm" />
+        <label className="text-xs font-medium text-muted">{t.title}</label>
+        <input name="title" className="rounded-lg border border-line px-2 py-1 text-sm" />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+        className="rounded-full bg-ink px-3 py-1.5 text-sm font-medium text-white transition hover:bg-orange disabled:opacity-50"
       >
-        {pending ? "Adding..." : "Add employee"}
+        {pending ? t.adding : t.addEmployee}
       </button>
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}
     </form>

@@ -3,8 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import type { Dictionary } from "@/lib/i18n/en";
 
-export function LoginForm({ redirectTo }: { redirectTo: string }) {
+export function LoginForm({ redirectTo, t }: { redirectTo: string; t: Dictionary }) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,8 +33,8 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
   return (
     <form onSubmit={handleSubmit} className="flex w-full max-w-sm flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <label htmlFor="email" className="text-sm font-medium text-gray-700">
-          Email
+        <label htmlFor="email" className="text-sm font-medium text-ink">
+          {t.email}
         </label>
         <input
           id="email"
@@ -42,13 +43,13 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+          className="rounded-xl border border-line bg-white px-3 py-2.5 text-sm focus:border-orange focus:outline-none"
         />
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="password" className="text-sm font-medium text-gray-700">
-          Password
+        <label htmlFor="password" className="text-sm font-medium text-ink">
+          {t.password}
         </label>
         <input
           id="password"
@@ -57,7 +58,7 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-gray-500 focus:outline-none"
+          className="rounded-xl border border-line bg-white px-3 py-2.5 text-sm focus:border-orange focus:outline-none"
         />
       </div>
 
@@ -66,9 +67,9 @@ export function LoginForm({ redirectTo }: { redirectTo: string }) {
       <button
         type="submit"
         disabled={loading}
-        className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
+        className="rounded-full bg-ink px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-orange disabled:opacity-50"
       >
-        {loading ? "Signing in..." : "Sign in"}
+        {loading ? t.signingIn : t.signIn}
       </button>
     </form>
   );

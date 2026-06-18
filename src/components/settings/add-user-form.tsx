@@ -2,6 +2,7 @@
 
 import { useActionState, useRef, useState } from "react";
 import { createUserAction } from "@/lib/actions/users";
+import type { Dictionary } from "@/lib/i18n/en";
 
 type ActionState = { error: string | null; tempPassword: string | null };
 
@@ -9,7 +10,13 @@ async function action(_prev: ActionState, formData: FormData): Promise<ActionSta
   return createUserAction(formData);
 }
 
-export function AddUserForm({ branches }: { branches: { id: string; name: string }[] }) {
+export function AddUserForm({
+  branches,
+  t,
+}: {
+  branches: { id: string; name: string }[];
+  t: Dictionary;
+}) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(action, {
     error: null,
     tempPassword: null,
@@ -26,38 +33,38 @@ export function AddUserForm({ branches }: { branches: { id: string; name: string
           formRef.current?.reset();
           setRole("branch_manager");
         }}
-        className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+        className="flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm"
       >
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">Name</label>
-          <input name="fullName" required className="rounded border border-gray-300 px-2 py-1 text-sm" />
+          <label className="text-xs font-medium text-muted">{t.name}</label>
+          <input name="fullName" required className="rounded-lg border border-line px-2 py-1 text-sm" />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">Email</label>
+          <label className="text-xs font-medium text-muted">{t.email}</label>
           <input
             name="email"
             type="email"
             required
-            className="rounded border border-gray-300 px-2 py-1 text-sm"
+            className="rounded-lg border border-line px-2 py-1 text-sm"
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs font-medium text-gray-500">Role</label>
+          <label className="text-xs font-medium text-muted">{t.role}</label>
           <select
             name="role"
             value={role}
             onChange={(e) => setRole(e.target.value as typeof role)}
-            className="rounded border border-gray-300 px-2 py-1 text-sm"
+            className="rounded-lg border border-line px-2 py-1 text-sm"
           >
-            <option value="branch_manager">Branch manager</option>
-            <option value="legal_admin">Legal admin</option>
+            <option value="branch_manager">{t.branchManagerRole}</option>
+            <option value="legal_admin">{t.legalAdminRole}</option>
           </select>
         </div>
         {role === "branch_manager" && (
           <div className="flex flex-col gap-1">
-            <label className="text-xs font-medium text-gray-500">Branch</label>
-            <select name="branchId" required className="rounded border border-gray-300 px-2 py-1 text-sm">
-              <option value="">Select branch...</option>
+            <label className="text-xs font-medium text-muted">{t.branch}</label>
+            <select name="branchId" required className="rounded-lg border border-line px-2 py-1 text-sm">
+              <option value="">{t.selectBranch}</option>
               {branches.map((b) => (
                 <option key={b.id} value={b.id}>
                   {b.name}
@@ -69,16 +76,16 @@ export function AddUserForm({ branches }: { branches: { id: string; name: string
         <button
           type="submit"
           disabled={pending}
-          className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+          className="rounded-full bg-ink px-3 py-1.5 text-sm font-medium text-white transition hover:bg-orange disabled:opacity-50"
         >
-          {pending ? "Creating..." : "Create user"}
+          {pending ? t.creating : t.createUser}
         </button>
         {state.error && <p className="text-sm text-red-600">{state.error}</p>}
       </form>
 
       {state.tempPassword && (
-        <div className="rounded-lg border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
-          User created. Share this temporary password with them now — it won&apos;t be shown again:{" "}
+        <div className="rounded-2xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900">
+          {t.tempPasswordMsg}{" "}
           <code className="rounded bg-amber-100 px-2 py-0.5 font-mono">{state.tempPassword}</code>
         </div>
       )}

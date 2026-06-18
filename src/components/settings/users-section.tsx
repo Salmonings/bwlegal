@@ -3,8 +3,9 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentProfile } from "@/lib/auth";
 import { AddUserForm } from "@/components/settings/add-user-form";
 import { UserRow } from "@/components/settings/user-row";
+import type { Dictionary } from "@/lib/i18n/en";
 
-export async function UsersSection() {
+export async function UsersSection({ t }: { t: Dictionary }) {
   const currentProfile = await getCurrentProfile();
   const supabase = await createClient();
   const admin = createAdminClient();
@@ -19,12 +20,14 @@ export async function UsersSection() {
 
   return (
     <div className="flex flex-col gap-4">
-      <AddUserForm branches={branches ?? []} />
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="grid grid-cols-12 gap-3 border-b border-gray-200 bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500">
-          <div className="col-span-3">Name / Email</div>
-          <div className="col-span-3">Role</div>
-          <div className="col-span-3">Branch</div>
+      <AddUserForm branches={branches ?? []} t={t} />
+      <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
+        <div className="grid grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted">
+          <div className="col-span-3">
+            {t.name} / {t.email}
+          </div>
+          <div className="col-span-3">{t.role}</div>
+          <div className="col-span-3">{t.branch}</div>
           <div className="col-span-3" />
         </div>
         {profiles?.map((p) => (
@@ -37,6 +40,7 @@ export async function UsersSection() {
             branchId={p.branch_id}
             branches={branches ?? []}
             isSelf={p.id === currentProfile?.id}
+            t={t}
           />
         ))}
       </div>

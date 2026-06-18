@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { saveDocumentAction } from "@/lib/actions/documents";
 import { StatusBadge, type DocumentStatus } from "@/components/status-badge";
+import type { Dictionary } from "@/lib/i18n/en";
 
 type Props = {
   branchId: string;
@@ -17,6 +18,7 @@ type Props = {
   existingDocumentId: string | null;
   signedUrl: string | null;
   canEdit: boolean;
+  t: Dictionary;
 };
 
 type ActionState = { error: string | null };
@@ -30,11 +32,12 @@ export function DocumentRow(props: Props) {
     error: null,
   });
   const [isNotApplicable, setIsNotApplicable] = useState(props.isNotApplicable);
+  const { t } = props;
 
   return (
     <form
       action={formAction}
-      className="grid grid-cols-12 gap-3 border-b border-gray-200 px-4 py-3 text-sm last:border-b-0"
+      className="grid grid-cols-12 gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0"
     >
       <input type="hidden" name="branchId" value={props.branchId} />
       <input type="hidden" name="documentTypeId" value={props.documentTypeId} />
@@ -43,14 +46,14 @@ export function DocumentRow(props: Props) {
       )}
 
       <div className="col-span-3 flex flex-col">
-        <span className="font-medium text-gray-900">{props.nameEn}</span>
-        <span dir="rtl" className="text-xs text-gray-500">
+        <span className="font-medium text-ink">{props.nameEn}</span>
+        <span dir="rtl" className="text-xs text-muted">
           {props.nameAr}
         </span>
       </div>
 
       <div className="col-span-1 flex items-center">
-        <StatusBadge status={isNotApplicable ? "na" : props.status} />
+        <StatusBadge status={isNotApplicable ? "na" : props.status} t={t} />
       </div>
 
       <div className="col-span-2 flex flex-col gap-1">
@@ -59,14 +62,14 @@ export function DocumentRow(props: Props) {
           name="startDate"
           defaultValue={props.startDate ?? ""}
           disabled={!props.canEdit}
-          className="rounded border border-gray-300 px-2 py-1 text-xs disabled:bg-gray-50"
+          className="rounded-lg border border-line px-2 py-1 text-xs disabled:bg-cream"
         />
         <input
           type="date"
           name="expiryDate"
           defaultValue={props.expiryDate ?? ""}
           disabled={!props.canEdit}
-          className="rounded border border-gray-300 px-2 py-1 text-xs disabled:bg-gray-50"
+          className="rounded-lg border border-line px-2 py-1 text-xs disabled:bg-cream"
         />
       </div>
 
@@ -83,9 +86,9 @@ export function DocumentRow(props: Props) {
             href={props.signedUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs font-medium text-blue-600 hover:underline"
+            className="text-xs font-medium text-orange hover:underline"
           >
-            View current file
+            {t.viewCurrentFile}
           </a>
         )}
       </div>
@@ -96,8 +99,8 @@ export function DocumentRow(props: Props) {
           defaultValue={props.notes ?? ""}
           disabled={!props.canEdit}
           rows={2}
-          placeholder="Notes"
-          className="w-full resize-none rounded border border-gray-300 px-2 py-1 text-xs disabled:bg-gray-50"
+          placeholder={t.notes}
+          className="w-full resize-none rounded-lg border border-line px-2 py-1 text-xs disabled:bg-cream"
         />
       </div>
 
@@ -109,7 +112,7 @@ export function DocumentRow(props: Props) {
           onChange={(e) => setIsNotApplicable(e.target.checked)}
           disabled={!props.canEdit}
         />
-        <label className="text-xs text-gray-600">N/A</label>
+        <label className="text-xs text-muted">{t.statusNa}</label>
       </div>
 
       <div className="col-span-1 flex items-start justify-end">
@@ -117,9 +120,9 @@ export function DocumentRow(props: Props) {
           <button
             type="submit"
             disabled={pending}
-            className="rounded-md bg-gray-900 px-2.5 py-1 text-xs font-medium text-white disabled:opacity-50"
+            className="rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white transition hover:bg-orange disabled:opacity-50"
           >
-            {pending ? "Saving..." : "Save"}
+            {pending ? t.saving : t.save}
           </button>
         )}
       </div>

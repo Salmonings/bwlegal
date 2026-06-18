@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AddEmployeeForm } from "@/components/add-employee-form";
 import { EmployeeRow } from "@/components/employee-row";
 import type { DocumentStatus } from "@/components/status-badge";
+import type { Dictionary } from "@/lib/i18n/en";
 
 function worstStatus(statuses: DocumentStatus[]): DocumentStatus {
   if (statuses.some((s) => s === "expired")) return "expired";
@@ -11,7 +12,15 @@ function worstStatus(statuses: DocumentStatus[]): DocumentStatus {
   return "valid";
 }
 
-export async function EmployeeList({ branchId, canEdit }: { branchId: string; canEdit: boolean }) {
+export async function EmployeeList({
+  branchId,
+  canEdit,
+  t,
+}: {
+  branchId: string;
+  canEdit: boolean;
+  t: Dictionary;
+}) {
   const supabase = await createClient();
 
   const [{ data: employees }, { data: statusRows }] = await Promise.all([
@@ -33,13 +42,13 @@ export async function EmployeeList({ branchId, canEdit }: { branchId: string; ca
 
   return (
     <div className="flex flex-col gap-4">
-      {canEdit && <AddEmployeeForm branchId={branchId} />}
+      {canEdit && <AddEmployeeForm branchId={branchId} t={t} />}
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="grid grid-cols-12 gap-3 border-b border-gray-200 bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500">
-          <div className="col-span-4">Name</div>
-          <div className="col-span-3">Title</div>
-          <div className="col-span-2">Status</div>
+      <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
+        <div className="grid grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted">
+          <div className="col-span-4">{t.name}</div>
+          <div className="col-span-3">{t.title}</div>
+          <div className="col-span-2">{t.status}</div>
           <div className="col-span-3" />
         </div>
 
@@ -55,12 +64,13 @@ export async function EmployeeList({ branchId, canEdit }: { branchId: string; ca
               isActive={e.is_active}
               worstStatus={e.is_active && statuses ? worstStatus(statuses) : null}
               canEdit={canEdit}
+              t={t}
             />
           );
         })}
 
         {(!employees || employees.length === 0) && (
-          <p className="px-4 py-6 text-center text-sm text-gray-400">No employees yet.</p>
+          <p className="px-4 py-6 text-center text-sm text-muted">{t.noEmployeesYet}</p>
         )}
       </div>
     </div>

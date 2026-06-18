@@ -4,7 +4,9 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { BranchChecklist } from "@/components/branch-checklist";
 import { LogoutButton } from "@/components/logout-button";
+import { LanguageToggle } from "@/components/language-toggle";
 import { IssueCountBadge } from "@/components/issue-count-badge";
+import { getDictionary, backArrow } from "@/lib/i18n";
 
 export default async function BranchPage({
   params,
@@ -19,6 +21,7 @@ export default async function BranchPage({
     redirect("/");
   }
 
+  const { locale, t } = await getDictionary();
   const supabase = await createClient();
   const { data: branch } = await supabase
     .from("branches")
@@ -29,24 +32,27 @@ export default async function BranchPage({
   if (!branch) redirect("/");
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4">
+    <div className="min-h-screen bg-cream">
+      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
         <div className="flex items-center gap-2">
           <div>
             {profile.role === "legal_admin" && (
-              <Link href="/" className="text-xs text-gray-400 hover:text-gray-600">
-                &larr; All branches
+              <Link href="/" className="text-xs text-muted hover:text-orange">
+                {backArrow(locale)} {t.allBranches}
               </Link>
             )}
-            <h1 className="text-lg font-semibold text-gray-900">{branch.name}</h1>
+            <h1 className="text-lg font-bold text-ink">{branch.name}</h1>
           </div>
           <IssueCountBadge branchId={branchId} />
         </div>
-        <LogoutButton />
+        <div className="flex items-center gap-3">
+          <LanguageToggle locale={locale} />
+          <LogoutButton label={t.logout} />
+        </div>
       </header>
 
       <main className="p-6">
-        <BranchChecklist branchId={branchId} canEdit />
+        <BranchChecklist branchId={branchId} canEdit t={t} locale={locale} />
       </main>
     </div>
   );

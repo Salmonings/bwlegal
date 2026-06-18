@@ -1,13 +1,16 @@
 "use client";
 
 import { useActionState, useRef } from "react";
+import type { Dictionary } from "@/lib/i18n/en";
 
 type ActionState = { error: string | null };
 
 export function AddCatalogForm({
   createAction,
+  t,
 }: {
   createAction: (formData: FormData) => Promise<ActionState>;
+  t: Dictionary;
 }) {
   const [state, formAction, pending] = useActionState<ActionState, FormData>(
     async (_prev, formData) => createAction(formData),
@@ -22,45 +25,45 @@ export function AddCatalogForm({
         await formAction(formData);
         formRef.current?.reset();
       }}
-      className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+      className="flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm"
     >
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-gray-500">English name</label>
-        <input name="nameEn" required className="rounded border border-gray-300 px-2 py-1 text-sm" />
+        <label className="text-xs font-medium text-muted">{t.englishName}</label>
+        <input name="nameEn" required className="rounded-lg border border-line px-2 py-1 text-sm" />
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-gray-500">Arabic name</label>
+        <label className="text-xs font-medium text-muted">{t.arabicName}</label>
         <input
           name="nameAr"
           dir="rtl"
           required
-          className="rounded border border-gray-300 px-2 py-1 text-sm"
+          className="rounded-lg border border-line px-2 py-1 text-sm"
         />
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-gray-500">Display order</label>
+        <label className="text-xs font-medium text-muted">{t.displayOrder}</label>
         <input
           name="displayOrder"
           type="number"
           defaultValue={0}
-          className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+          className="w-24 rounded-lg border border-line px-2 py-1 text-sm"
         />
       </div>
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-gray-500">Lead time (days)</label>
+        <label className="text-xs font-medium text-muted">{t.leadTimeDays}</label>
         <input
           name="defaultLeadTimeDays"
           type="number"
           defaultValue={30}
-          className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+          className="w-24 rounded-lg border border-line px-2 py-1 text-sm"
         />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+        className="rounded-full bg-ink px-3 py-1.5 text-sm font-medium text-white transition hover:bg-orange disabled:opacity-50"
       >
-        {pending ? "Adding..." : "Add"}
+        {pending ? t.adding : t.add}
       </button>
       {state.error && <p className="text-sm text-red-600">{state.error}</p>}
     </form>

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { EmployeeDocumentRow } from "@/components/employee-document-row";
 import type { DocumentStatus } from "@/components/status-badge";
+import type { Dictionary } from "@/lib/i18n/en";
 
 const SIGNED_URL_TTL_SECONDS = 600;
 
@@ -8,10 +9,12 @@ export async function EmployeeChecklist({
   branchId,
   employeeId,
   canEdit,
+  t,
 }: {
   branchId: string;
   employeeId: string;
   canEdit: boolean;
+  t: Dictionary;
 }) {
   const supabase = await createClient();
 
@@ -22,7 +25,7 @@ export async function EmployeeChecklist({
     .order("display_order");
 
   if (!rows || rows.length === 0) {
-    return <p className="text-sm text-gray-500">No employee found, or you don&apos;t have access to it.</p>;
+    return <p className="text-sm text-muted">No employee found, or you don&apos;t have access to it.</p>;
   }
 
   const filePaths = rows.filter((r) => r.file_path).map((r) => r.file_path as string);
@@ -39,14 +42,14 @@ export async function EmployeeChecklist({
   }
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-      <div className="grid grid-cols-12 gap-3 border-b border-gray-200 bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500">
-        <div className="col-span-3">Document</div>
-        <div className="col-span-1">Status</div>
-        <div className="col-span-2">Dates</div>
-        <div className="col-span-2">File</div>
-        <div className="col-span-2">Notes</div>
-        <div className="col-span-1">N/A</div>
+    <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
+      <div className="grid grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted">
+        <div className="col-span-3">{t.document}</div>
+        <div className="col-span-1">{t.status}</div>
+        <div className="col-span-2">{t.dates}</div>
+        <div className="col-span-2">{t.file}</div>
+        <div className="col-span-2">{t.notes}</div>
+        <div className="col-span-1">{t.statusNa}</div>
         <div className="col-span-1" />
       </div>
 
@@ -66,6 +69,7 @@ export async function EmployeeChecklist({
           existingDocumentId={row.employee_document_id}
           signedUrl={row.file_path ? signedUrlByPath.get(row.file_path) ?? null : null}
           canEdit={canEdit}
+          t={t}
         />
       ))}
     </div>

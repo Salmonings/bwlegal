@@ -4,6 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { updateEmployeeAction, setEmployeeActiveAction } from "@/lib/actions/employees";
 import { StatusBadge, type DocumentStatus } from "@/components/status-badge";
+import type { Dictionary } from "@/lib/i18n/en";
 
 type Props = {
   branchId: string;
@@ -13,6 +14,7 @@ type Props = {
   isActive: boolean;
   worstStatus: DocumentStatus | null;
   canEdit: boolean;
+  t: Dictionary;
 };
 
 type ActionState = { error: string | null };
@@ -26,6 +28,7 @@ async function toggleAction(_prev: ActionState, formData: FormData): Promise<Act
 }
 
 export function EmployeeRow(props: Props) {
+  const { t } = props;
   const [updateState, updateFormAction, updatePending] = useActionState<ActionState, FormData>(
     updateAction,
     { error: null }
@@ -47,7 +50,7 @@ export function EmployeeRow(props: Props) {
   }, [updatePending, updateState.error]);
 
   return (
-    <div className="grid grid-cols-12 items-center gap-3 border-b border-gray-200 px-4 py-3 text-sm last:border-b-0">
+    <div className="grid grid-cols-12 items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0">
       {editing ? (
         <form action={updateFormAction} className="col-span-9 grid grid-cols-9 items-center gap-3">
           <input type="hidden" name="branchId" value={props.branchId} />
@@ -55,28 +58,28 @@ export function EmployeeRow(props: Props) {
           <input
             name="fullName"
             defaultValue={props.fullName}
-            className="col-span-4 rounded border border-gray-300 px-2 py-1 text-sm"
+            className="col-span-4 rounded-lg border border-line px-2 py-1 text-sm"
           />
           <input
             name="title"
             defaultValue={props.title ?? ""}
-            placeholder="Title"
-            className="col-span-3 rounded border border-gray-300 px-2 py-1 text-sm"
+            placeholder={t.title}
+            className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
           />
           <div className="col-span-2 flex gap-2">
             <button
               type="submit"
               disabled={updatePending}
-              className="rounded-md bg-gray-900 px-2.5 py-1 text-xs font-medium text-white disabled:opacity-50"
+              className="rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white hover:bg-orange disabled:opacity-50"
             >
-              {updatePending ? "Saving..." : "Save"}
+              {updatePending ? t.saving : t.save}
             </button>
             <button
               type="button"
               onClick={() => setEditing(false)}
-              className="rounded-md border border-gray-300 px-2.5 py-1 text-xs font-medium text-gray-700"
+              className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink"
             >
-              Cancel
+              {t.cancel}
             </button>
           </div>
         </form>
@@ -84,18 +87,18 @@ export function EmployeeRow(props: Props) {
         <>
           <Link
             href={`/branches/${props.branchId}/employees/${props.employeeId}`}
-            className="col-span-4 font-medium text-gray-900 hover:underline"
+            className="col-span-4 font-medium text-ink hover:text-orange"
           >
             {props.fullName}
           </Link>
-          <span className="col-span-3 text-gray-600">{props.title ?? "—"}</span>
+          <span className="col-span-3 text-muted">{props.title ?? "—"}</span>
           <span className="col-span-2">
             {!props.isActive ? (
               <span className="inline-flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                Inactive
+                {t.inactive}
               </span>
             ) : props.worstStatus ? (
-              <StatusBadge status={props.worstStatus} />
+              <StatusBadge status={props.worstStatus} t={t} />
             ) : null}
           </span>
         </>
@@ -106,9 +109,9 @@ export function EmployeeRow(props: Props) {
           <button
             type="button"
             onClick={() => setEditing(true)}
-            className="rounded-md border border-gray-300 px-2.5 py-1 text-xs font-medium text-gray-700"
+            className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink"
           >
-            Edit
+            {t.edit}
           </button>
           <form action={toggleFormAction}>
             <input type="hidden" name="branchId" value={props.branchId} />
@@ -117,9 +120,9 @@ export function EmployeeRow(props: Props) {
             <button
               type="submit"
               disabled={togglePending}
-              className="rounded-md border border-gray-300 px-2.5 py-1 text-xs font-medium text-gray-700 disabled:opacity-50"
+              className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink disabled:opacity-50"
             >
-              {props.isActive ? "Deactivate" : "Reactivate"}
+              {props.isActive ? t.deactivate : t.reactivate}
             </button>
           </form>
         </div>
