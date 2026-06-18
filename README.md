@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Branch Compliance Document Manager
 
-## Getting Started
+An internal web app for a multi-branch business to track the legal and
+compliance documents that must stay current at every branch — contracts,
+licenses, certificates, and employee paperwork — with expiry tracking and
+automated reminders.
 
-First, run the development server:
+- **Branch managers** maintain their own branch's documents and employees.
+- **Legal admins** see a compliance matrix across all branches, manage the
+  document-type catalog, branches, and users, and receive reminder emails
+  for everything expiring soon or already expired.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Arabic-only UI with right-to-left layout.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Tech stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- [Next.js](https://nextjs.org) (App Router, TypeScript)
+- [Supabase](https://supabase.com) — Postgres, auth, and private file storage
+- Row-Level Security enforced at the database level
+- [Resend](https://resend.com) for reminder emails
+- A small cron sidecar container for the daily reminder job
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local development
 
-## Learn More
+1. Install [the Supabase CLI](https://supabase.com/docs/guides/local-development/cli/getting-started)
+   and start a local stack:
+   ```bash
+   npx supabase start
+   ```
+2. Copy `.env.local.example` to `.env.local` and fill in the values printed
+   by `supabase start` (URL, anon key, service role key).
+3. Install dependencies and run the dev server:
+   ```bash
+   npm install
+   npm run dev
+   ```
+4. Seed a couple of test accounts (`admin@bwlegal.local` /
+   `manager.branch1@bwlegal.local`, both with password `Password123!`):
+   ```bash
+   npm run seed:users
+   npm run seed:documents   # optional: sample documents across statuses
+   ```
+5. Open [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+## Database
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Schema, RLS policies, storage bucket setup, and seed data all live under
+[`supabase/migrations`](supabase/migrations) and
+[`supabase/seed.sql`](supabase/seed.sql) — applied automatically by
+`supabase start` / `supabase db reset`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Deploying
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+See [`DEPLOYMENT.md`](DEPLOYMENT.md) for a self-hosted Docker + Nginx +
+self-hosted Supabase runbook.

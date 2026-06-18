@@ -1,28 +1,31 @@
-# Deployment Runbook — Self-Hosted on bestway-prod
+# Deployment Runbook — Self-Hosted
 
-This guide is written specifically for the actual current state of
-`bestway-prod`, confirmed before writing this:
+This guide assumes a small VPS that may already be running other
+unrelated services, confirmed before writing this:
 
-- 3.7 GB RAM total, ~3.3 GB available, **no swap configured**
-- Nginx 1.24.0 already running, serving an existing site (`bestway-video`,
-  the WebRTC app) — we will **add** new site files alongside it, never
-  touch its config
-- Docker is **not installed yet**
-- UFW is already active with `22, 80, 443, 3478, 3478/udp, 5349` allowed —
-  already correct for what we need, no firewall changes required
-- coturn is presumably running natively (not in Docker) for the WebRTC app
+- Limited RAM, possibly with **no swap configured** — check with `free -h`
+  before starting.
+- A reverse proxy (e.g. Nginx) may already be running, serving an existing
+  site — we will **add** new site files alongside it, never touch its
+  config.
+- Docker may or may not be installed yet — check with `docker --version`.
+- Your firewall (e.g. UFW) should allow `22, 80, 443` at minimum; add any
+  ports required by other services already running on the box.
+- If another latency-sensitive service shares the box (e.g. a WebRTC app
+  using coturn), treat its config and ports as off-limits — every step
+  below is additive only.
 
-Because RAM is tight and shared with a live, latency-sensitive WebRTC
-service, this guide deliberately runs a **trimmed** Supabase stack (just
-Postgres, Auth, PostgREST, Storage, Kong) instead of every official
-service, plus a swap file as an OOM safety net. Every step below is
-additive — nothing here modifies the existing `bestway-video` Nginx config
-or touches coturn.
+Because RAM may be tight and possibly shared with another live service,
+this guide deliberately runs a **trimmed** Supabase stack (just Postgres,
+Auth, PostgREST, Storage, Kong) instead of every official service, plus a
+swap file as an OOM safety net. Every step below is additive — nothing
+here should modify any existing site's Nginx config or touch unrelated
+services.
 
-Replace `yourdomain.com` / `app.yourdomain.com` / `api.yourdomain.com`
-below with your real domain. Commands assume you're operating as `root`
-(matching your current session) — adjust `sudo`/paths if you set up a
-separate user.
+Replace `yourdomain.com` / `app.yourdomain.com` / `api.yourdomain.com` /
+`your-server` below with your real domain and host. Commands assume
+you're operating as `root` — adjust `sudo`/paths if you set up a separate
+user.
 
 ---
 
@@ -36,13 +39,13 @@ You need:
 
 ## Phase 1 — DNS
 
-At your DNS provider, point two subdomains at bestway-prod's public IP
-(the same IP `bestway-video` already resolves to):
+At your DNS provider, point two subdomains at your server's public IP
+(the same IP any existing site on the box already resolves to):
 
 | Type | Name | Value |
 |---|---|---|
-| A | `app.yourdomain.com` | `<bestway-prod's public IP>` |
-| A | `api.yourdomain.com` | `<bestway-prod's public IP>` |
+| A | `app.yourdomain.com` | `<your server's public IP>` |
+| A | `api.yourdomain.com` | `<your server's public IP>` |
 
 `app.*` serves the Next.js app; `api.*` serves the Supabase API gateway
 (Kong). DNS propagation can take minutes to hours — move on, Certbot will
@@ -52,10 +55,11 @@ just fail cleanly later if it hasn't propagated yet, and you can retry.
 
 ## Phase 2 — Swap + Docker
 
-**Add a 4 GB swap file.** With no swap and 3.3 GB available, a memory
-spike from any of these new services risks an OOM kill — possibly of
-coturn or the WebRTC app, not just our new stuff. Swap doesn't add real
-throughput, but it turns a hard crash into graceful (if slow) degradation:
+**Add a swap file if you don't have one** (size it to your RAM — 4 GB is a
+reasonable default on a small VPS). With little to no swap, a memory
+spike from any of these new services risks an OOM kill of something else
+on the box, not just our new stuff. Swap doesn't add real throughput, but
+it turns a hard crash into graceful (if slow) degradation:
 
 ```bash
 fallocate -l 4G /swapfile
@@ -66,7 +70,7 @@ echo '/swapfile none swap sw 0 0' >> /etc/fstab
 free -h   # confirm Swap now shows ~4.0Gi
 ```
 
-(75 GB disk with 66 GB free — plenty of room for this.)
+(Check `df -h` first to confirm you have disk room for this.)
 
 **Install Docker** (confirmed not present yet):
 
@@ -177,7 +181,7 @@ you've started it:
 
 ```bash
 # from your local machine, while studio is up on the server
-ssh -L 3000:localhost:8000 root@bestway-prod
+ssh -L 3000:localhost:8000 root@your-server
 # then visit http://localhost:3000 — adjust the port if Kong's differs
 ```
 
@@ -261,7 +265,7 @@ CRON_SECRET=<generate with: openssl rand -hex 32>
 
 ---
 
-## Phase 7 — Nginx + Certbot (additive — doesn't touch `bestway-video`)
+## Phase 7 — Nginx + Certbot (additive — doesn't touch any existing site)
 
 Install Certbot's Nginx plugin:
 
@@ -270,8 +274,8 @@ apt update
 apt install -y certbot python3-certbot-nginx
 ```
 
-Create **new** site files — these don't touch the existing
-`bestway-video` config at all:
+Create **new** site files — these don't touch any existing site's config
+at all:
 
 `/etc/nginx/sites-available/app.yourdomain.com`:
 ```nginx
@@ -315,14 +319,14 @@ ln -s /etc/nginx/sites-available/app.yourdomain.com /etc/nginx/sites-enabled/
 ln -s /etc/nginx/sites-available/api.yourdomain.com /etc/nginx/sites-enabled/
 
 # Always test before reloading on a box serving live traffic.
-# A bad config makes `reload` refuse to apply it — bestway-video keeps
-# running on the old config either way — but always check first.
+# A bad config makes `reload` refuse to apply it — any existing site keeps
+# running on its old config either way — but always check first.
 nginx -t
 systemctl reload nginx   # never `restart` here — reload is the safe one
 ```
 
 Get certificates for **only** the two new domains — passing explicit `-d`
-flags means Certbot won't touch `bestway-video`'s certificate or config:
+flags means Certbot won't touch any other site's certificate or config:
 
 ```bash
 certbot --nginx -d app.yourdomain.com -d api.yourdomain.com
@@ -401,7 +405,7 @@ temp-password flow shows the password once on creation.
    manager user (note the temp password shown).
 3. Log out, log in as that branch manager.
 4. Upload a document, set dates, save — confirm the status badge is right.
-5. Toggle the language switcher — confirm Arabic + RTL render correctly.
+5. Confirm the UI renders in Arabic with correct RTL layout.
 6. As admin, confirm the compliance matrix shows what you just uploaded.
 7. Trigger the cron route manually:
    ```bash
@@ -409,8 +413,8 @@ temp-password flow shows the password once on creation.
      https://app.yourdomain.com/api/cron/reminders
    ```
    Should return `200` with `itemsFound`/`emailsSent`/`itemsLogged`, not `500`.
-8. Confirm `bestway-video` still works exactly as before — nothing above
-   should have touched it, but verify anyway.
+8. If another site shares this server, confirm it still works exactly as
+   before — nothing above should have touched it, but verify anyway.
 
 ---
 
@@ -434,8 +438,8 @@ starting on boot by default after the install script means the app + cron
 containers come back automatically. Nginx and Certbot's renewal timer are
 both systemd services, already enabled. Nothing manual needed.
 
-**Watch memory now that this is running alongside coturn + the WebRTC
-app:**
+**Watch memory, especially if this is running alongside other services on
+the same box:**
 ```bash
 free -h
 docker stats --no-stream

@@ -10,14 +10,14 @@ const DEV_PASSWORD = "Password123!";
 async function main() {
   const supabase = createAdminClient();
 
-  const { data: zayed, error: branchError } = await supabase
+  const { data: branch1, error: branchError } = await supabase
     .from("branches")
     .select("id, name")
-    .eq("name", "Zayed")
+    .eq("name", "Branch 1")
     .single();
 
-  if (branchError || !zayed) {
-    throw new Error(`Could not find seeded "Zayed" branch — run supabase db reset first. ${branchError?.message ?? ""}`);
+  if (branchError || !branch1) {
+    throw new Error(`Could not find seeded "Branch 1" — run supabase db reset first. ${branchError?.message ?? ""}`);
   }
 
   const usersToCreate = [
@@ -28,10 +28,10 @@ async function main() {
       branch_id: null as string | null,
     },
     {
-      email: "manager.zayed@bwlegal.local",
-      full_name: "Zayed Branch Manager",
+      email: "manager.branch1@bwlegal.local",
+      full_name: "Branch 1 Manager",
       role: "branch_manager" as const,
-      branch_id: zayed.id,
+      branch_id: branch1.id,
     },
   ];
 

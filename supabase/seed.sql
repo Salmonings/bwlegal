@@ -3,19 +3,19 @@
 -- have someone fluent in Egyptian legal terminology review before production use.
 
 insert into public.branches (name) values
-  ('Zayed'),
-  ('Downtown'),
-  ('O West'),
-  ('Marina'),
-  ('Mountain View'),
-  ('Mangroovy'),
-  ('Sokhna'),
-  ('Al-Ahyaa'),
-  ('Hurghada'),
-  ('Metro'),
-  ('Sahl Hasheesh'),
-  ('Makadi'),
-  ('Main Kitchen');
+  ('Branch 1'),
+  ('Branch 2'),
+  ('Branch 3'),
+  ('Branch 4'),
+  ('Branch 5'),
+  ('Branch 6'),
+  ('Branch 7'),
+  ('Branch 8'),
+  ('Branch 9'),
+  ('Branch 10'),
+  ('Branch 11'),
+  ('Branch 12'),
+  ('Central Kitchen');
 
 insert into public.document_types (name_ar, display_order, default_lead_time_days) values
   ('عقد المبنى', 1, 30),

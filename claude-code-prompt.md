@@ -99,7 +99,7 @@ Use the type's `default_lead_time_days` for the threshold.
 Seed these on first run.
 
 **Branches:**
-Zayed, Downtown, O West, Marina, Mountain View, Mangroovy, Sokhna, Al-Ahyaa, Hurghada, Metro, Sahl Hasheesh, Makadi, Main Kitchen
+Branch 1, Branch 2, Branch 3, Branch 4, Branch 5, Branch 6, Branch 7, Branch 8, Branch 9, Branch 10, Branch 11, Branch 12, Central Kitchen
 
 **Company document types (items 1–9):**
 1. Premises Contract
