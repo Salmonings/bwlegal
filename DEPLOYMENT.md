@@ -283,6 +283,11 @@ server {
     listen 80;
     server_name app.yourdomain.com;
 
+    # Nginx defaults to 1m, which silently cuts off the document uploads
+    # (PDF/JPG/PNG up to 15 MB — see next.config.ts) before they reach the
+    # app. Match that limit here.
+    client_max_body_size 16m;
+
     location / {
         proxy_pass http://127.0.0.1:3001;
         proxy_set_header Host $host;
@@ -298,6 +303,10 @@ server {
 server {
     listen 80;
     server_name api.yourdomain.com;
+
+    # Uploaded documents are stored in Supabase Storage via this API, so it
+    # needs the same ceiling as the app server block above.
+    client_max_body_size 16m;
 
     location / {
         proxy_pass http://127.0.0.1:8000;
