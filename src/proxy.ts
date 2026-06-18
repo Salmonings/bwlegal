@@ -44,8 +44,10 @@ export async function proxy(request: NextRequest) {
 
 // /api is excluded: route handlers do their own auth (Supabase session check,
 // or the CRON_SECRET bearer check for the reminders cron route).
+// icon/apple-icon are the generated favicon routes (next/og) — public assets,
+// not real app pages — so they must never get redirected to /login.
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|icon|apple-icon|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };
