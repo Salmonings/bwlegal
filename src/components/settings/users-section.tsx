@@ -3,7 +3,7 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentProfile } from "@/lib/auth";
 import { AddUserForm } from "@/components/settings/add-user-form";
 import { UserRow } from "@/components/settings/user-row";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 export async function UsersSection({ t }: { t: Dictionary }) {
   const currentProfile = await getCurrentProfile();

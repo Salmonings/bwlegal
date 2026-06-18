@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useRef } from "react";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 type ActionState = { error: string | null };
 
@@ -28,14 +28,9 @@ export function AddCatalogForm({
       className="flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm"
     >
       <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted">{t.englishName}</label>
-        <input name="nameEn" required className="rounded-lg border border-line px-2 py-1 text-sm" />
-      </div>
-      <div className="flex flex-col gap-1">
-        <label className="text-xs font-medium text-muted">{t.arabicName}</label>
+        <label className="text-xs font-medium text-muted">{t.documentTypeName}</label>
         <input
           name="nameAr"
-          dir="rtl"
           required
           className="rounded-lg border border-line px-2 py-1 text-sm"
         />

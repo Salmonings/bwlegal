@@ -4,13 +4,14 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { t } from "@/lib/i18n";
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"];
 
 export async function saveEmployeeDocumentAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "Not signed in." };
+  if (!profile) return { error: t.errorNotSignedIn };
 
   const branchId = String(formData.get("branchId"));
   const employeeId = String(formData.get("employeeId"));
@@ -30,7 +31,7 @@ export async function saveEmployeeDocumentAction(formData: FormData) {
     .single();
 
   if (!employee || employee.branch_id !== branchId) {
-    return { error: "You don't have access to this employee." };
+    return { error: t.errorNoEmployeeAccess };
   }
 
   const startDate = (formData.get("startDate") as string) || null;
@@ -43,10 +44,10 @@ export async function saveEmployeeDocumentAction(formData: FormData) {
 
   if (file && file.size > 0) {
     if (file.size > MAX_FILE_SIZE) {
-      return { error: "File is larger than 15 MB." };
+      return { error: t.errorFileTooLarge };
     }
     if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      return { error: "Only PDF, JPG, and PNG files are allowed." };
+      return { error: t.errorInvalidFileType };
     }
 
     const safeName = file.name.replace(/[^a-zA-Z0-9_.-]/g, "_");
@@ -57,7 +58,7 @@ export async function saveEmployeeDocumentAction(formData: FormData) {
       .upload(path, file, { contentType: file.type });
 
     if (uploadError) {
-      return { error: `Upload failed: ${uploadError.message}` };
+      return { error: `${t.errorUploadFailed}: ${uploadError.message}` };
     }
 
     filePath = path;

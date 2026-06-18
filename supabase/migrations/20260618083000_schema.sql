@@ -32,7 +32,6 @@ create index profiles_branch_id_idx on public.profiles (branch_id);
 -- ---------------------------------------------------------------------------
 create table public.document_types (
   id uuid primary key default gen_random_uuid(),
-  name_en text not null,
   name_ar text not null,
   display_order int not null default 0,
   default_lead_time_days int not null default 30,
@@ -41,7 +40,6 @@ create table public.document_types (
 
 create table public.employee_document_types (
   id uuid primary key default gen_random_uuid(),
-  name_en text not null,
   name_ar text not null,
   display_order int not null default 0,
   default_lead_time_days int not null default 30,
@@ -160,7 +158,6 @@ select
   b.id as branch_id,
   b.name as branch_name,
   dt.id as document_type_id,
-  dt.name_en as document_type_name_en,
   dt.name_ar as document_type_name_ar,
   dt.display_order,
   d.id as document_id,
@@ -196,7 +193,6 @@ select
   e.full_name as employee_full_name,
   e.title as employee_title,
   edt.id as employee_document_type_id,
-  edt.name_en as employee_document_type_name_en,
   edt.name_ar as employee_document_type_name_ar,
   edt.display_order,
   ed.id as employee_document_id,

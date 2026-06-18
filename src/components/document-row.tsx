@@ -3,13 +3,12 @@
 import { useActionState, useState } from "react";
 import { saveDocumentAction } from "@/lib/actions/documents";
 import { StatusBadge, type DocumentStatus } from "@/components/status-badge";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 type Props = {
   branchId: string;
   documentTypeId: string;
-  nameEn: string;
-  nameAr: string;
+  name: string;
   status: DocumentStatus;
   startDate: string | null;
   expiryDate: string | null;
@@ -47,10 +46,7 @@ export function DocumentRow(props: Props) {
 
       <div className="flex items-center justify-between gap-2 sm:col-span-3 sm:flex-col sm:items-start">
         <div className="flex flex-col">
-          <span className="font-medium text-ink">{props.nameEn}</span>
-          <span dir="rtl" className="text-xs text-muted">
-            {props.nameAr}
-          </span>
+          <span className="font-medium text-ink">{props.name}</span>
         </div>
         <div className="sm:hidden">
           <StatusBadge status={isNotApplicable ? "na" : props.status} t={t} />

@@ -3,17 +3,14 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
-import { LanguageToggle } from "@/components/language-toggle";
 import { BranchChecklist } from "@/components/branch-checklist";
 import { ComplianceMatrix } from "@/components/compliance-matrix";
 import { IssueCountBadge } from "@/components/issue-count-badge";
-import { getDictionary, type Locale } from "@/lib/i18n";
-import type { Dictionary } from "@/lib/i18n/en";
+import { t, type Dictionary } from "@/lib/i18n";
 
 export default async function DashboardPage() {
   const profile = await getCurrentProfile();
   if (!profile) redirect("/login");
-  const { locale, t } = await getDictionary();
 
   return (
     <div className="min-h-screen bg-cream">
@@ -33,7 +30,6 @@ export default async function DashboardPage() {
               {t.settings}
             </Link>
           )}
-          <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
@@ -42,7 +38,7 @@ export default async function DashboardPage() {
         {profile.role === "legal_admin" ? (
           <AdminDashboard t={t} />
         ) : (
-          <BranchManagerDashboard branchId={profile.branch_id!} t={t} locale={locale} />
+          <BranchManagerDashboard branchId={profile.branch_id!} t={t} />
         )}
       </main>
     </div>
@@ -61,11 +57,9 @@ async function AdminDashboard({ t }: { t: Dictionary }) {
 async function BranchManagerDashboard({
   branchId,
   t,
-  locale,
 }: {
   branchId: string;
   t: Dictionary;
-  locale: Locale;
 }) {
   const supabase = await createClient();
   const { data: branch } = await supabase
@@ -79,7 +73,7 @@ async function BranchManagerDashboard({
       <h2 className="text-base font-semibold text-ink">
         {branch?.name} &mdash; {t.complianceChecklist}
       </h2>
-      <BranchChecklist branchId={branchId} canEdit t={t} locale={locale} />
+      <BranchChecklist branchId={branchId} canEdit t={t} />
     </div>
   );
 }

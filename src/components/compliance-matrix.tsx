@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { STATUS_DOT_COLOR, statusLabel, type DocumentStatus } from "@/components/status-badge";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 export async function ComplianceMatrix({ t }: { t: Dictionary }) {
   const supabase = await createClient();
@@ -11,10 +11,10 @@ export async function ComplianceMatrix({ t }: { t: Dictionary }) {
     .order("display_order");
 
   if (!rows || rows.length === 0) {
-    return <p className="text-sm text-muted">No data yet.</p>;
+    return <p className="text-sm text-muted">{t.noDataYet}</p>;
   }
 
-  const docTypes = new Map<string, { nameEn: string; displayOrder: number }>();
+  const docTypes = new Map<string, { name: string; displayOrder: number }>();
   const branches = new Map<
     string,
     { name: string; cells: Map<string, DocumentStatus>; expired: number; expiringSoon: number }
@@ -30,7 +30,7 @@ export async function ComplianceMatrix({ t }: { t: Dictionary }) {
 
     if (!docTypes.has(docTypeId)) {
       docTypes.set(docTypeId, {
-        nameEn: row.document_type_name_en!,
+        name: row.document_type_name_ar!,
         displayOrder: row.display_order ?? 0,
       });
     }
@@ -71,7 +71,7 @@ export async function ComplianceMatrix({ t }: { t: Dictionary }) {
       <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
         {sortedDocTypes.map(([id, dt], i) => (
           <span key={id}>
-            {i + 1}. {dt.nameEn}
+            {i + 1}. {dt.name}
           </span>
         ))}
       </div>
@@ -82,7 +82,7 @@ export async function ComplianceMatrix({ t }: { t: Dictionary }) {
             <tr className="border-b border-line bg-cream text-xs font-medium text-muted">
               <th className="px-4 py-2 text-start">{t.branch}</th>
               {sortedDocTypes.map(([id], i) => (
-                <th key={id} className="w-10 px-1 py-2 text-center" title={docTypes.get(id)!.nameEn}>
+                <th key={id} className="w-10 px-1 py-2 text-center" title={docTypes.get(id)!.name}>
                   {i + 1}
                 </th>
               ))}
@@ -105,7 +105,7 @@ export async function ComplianceMatrix({ t }: { t: Dictionary }) {
                       <td key={docTypeId} className="px-1 py-2 text-center">
                         <Link
                           href={`/branches/${branchId}`}
-                          title={`${dt.nameEn}: ${statusLabel(t, status)}`}
+                          title={`${dt.name}: ${statusLabel(t, status)}`}
                           className={`mx-auto block h-4 w-4 rounded ${STATUS_DOT_COLOR[status]}`}
                         />
                       </td>

@@ -2,7 +2,7 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { renameBranchAction } from "@/lib/actions/branches";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 type ActionState = { error: string | null };
 

@@ -4,7 +4,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { updateEmployeeAction, setEmployeeActiveAction } from "@/lib/actions/employees";
 import { StatusBadge, type DocumentStatus } from "@/components/status-badge";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 type Props = {
   branchId: string;

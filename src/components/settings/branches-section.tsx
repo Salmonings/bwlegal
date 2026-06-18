@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { AddBranchForm } from "@/components/settings/add-branch-form";
 import { BranchRow } from "@/components/settings/branch-row";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 export async function BranchesSection({ t }: { t: Dictionary }) {
   const supabase = await createClient();

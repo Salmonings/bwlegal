@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AddEmployeeForm } from "@/components/add-employee-form";
 import { EmployeeRow } from "@/components/employee-row";
 import type { DocumentStatus } from "@/components/status-badge";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 function worstStatus(statuses: DocumentStatus[]): DocumentStatus {
   if (statuses.some((s) => s === "expired")) return "expired";

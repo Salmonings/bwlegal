@@ -1,14 +1,13 @@
 "use client";
 
 import { useActionState, useEffect, useRef, useState } from "react";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 type ActionState = { error: string | null };
 
 type Props = {
   id: string;
-  nameEn: string;
-  nameAr: string;
+  name: string;
   displayOrder: number;
   defaultLeadTimeDays: number;
   isActive: boolean;
@@ -43,17 +42,10 @@ export function CatalogRow(props: Props) {
       >
         <input type="hidden" name="id" value={props.id} />
         <input
-          name="nameEn"
-          defaultValue={props.nameEn}
-          placeholder={t.englishName}
-          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
-        />
-        <input
           name="nameAr"
-          dir="rtl"
-          defaultValue={props.nameAr}
-          placeholder={t.arabicName}
-          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
+          defaultValue={props.name}
+          placeholder={t.documentTypeName}
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-6 sm:py-1"
         />
         <div className="flex gap-2 sm:contents">
           <input
@@ -93,10 +85,7 @@ export function CatalogRow(props: Props) {
   return (
     <div className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3">
       <div className="flex flex-col sm:col-span-3">
-        <span className={`font-medium ${props.isActive ? "text-ink" : "text-muted"}`}>{props.nameEn}</span>
-        <span dir="rtl" className="text-xs text-muted">
-          {props.nameAr}
-        </span>
+        <span className={`font-medium ${props.isActive ? "text-ink" : "text-muted"}`}>{props.name}</span>
       </div>
       <div className="flex items-center justify-between gap-2 text-muted sm:contents">
         <span className="sm:col-span-3">

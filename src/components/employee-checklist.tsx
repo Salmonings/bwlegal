@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { EmployeeDocumentRow } from "@/components/employee-document-row";
 import type { DocumentStatus } from "@/components/status-badge";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 const SIGNED_URL_TTL_SECONDS = 600;
 
@@ -25,7 +25,7 @@ export async function EmployeeChecklist({
     .order("display_order");
 
   if (!rows || rows.length === 0) {
-    return <p className="text-sm text-muted">No employee found, or you don&apos;t have access to it.</p>;
+    return <p className="text-sm text-muted">{t.noEmployeeAccess}</p>;
   }
 
   const filePaths = rows.filter((r) => r.file_path).map((r) => r.file_path as string);
@@ -59,8 +59,7 @@ export async function EmployeeChecklist({
           branchId={branchId}
           employeeId={employeeId}
           employeeDocumentTypeId={row.employee_document_type_id!}
-          nameEn={row.employee_document_type_name_en!}
-          nameAr={row.employee_document_type_name_ar!}
+          name={row.employee_document_type_name_ar!}
           status={row.status as DocumentStatus}
           startDate={row.start_date}
           expiryDate={row.expiry_date}

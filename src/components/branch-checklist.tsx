@@ -2,8 +2,7 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { DocumentRow } from "@/components/document-row";
 import type { DocumentStatus } from "@/components/status-badge";
-import { forwardArrow, type Locale } from "@/lib/i18n";
-import type { Dictionary } from "@/lib/i18n/en";
+import { ARROW_FORWARD, type Dictionary } from "@/lib/i18n";
 
 const SIGNED_URL_TTL_SECONDS = 600;
 
@@ -11,12 +10,10 @@ export async function BranchChecklist({
   branchId,
   canEdit,
   t,
-  locale,
 }: {
   branchId: string;
   canEdit: boolean;
   t: Dictionary;
-  locale: Locale;
 }) {
   const supabase = await createClient();
 
@@ -27,7 +24,7 @@ export async function BranchChecklist({
     .order("display_order");
 
   if (!rows || rows.length === 0) {
-    return <p className="text-sm text-muted">No branch found, or you don&apos;t have access to it.</p>;
+    return <p className="text-sm text-muted">{t.noBranchAccess}</p>;
   }
 
   const filePaths = rows.filter((r) => r.file_path).map((r) => r.file_path as string);
@@ -61,8 +58,7 @@ export async function BranchChecklist({
             key={row.document_type_id}
             branchId={branchId}
             documentTypeId={row.document_type_id!}
-            nameEn={row.document_type_name_en!}
-            nameAr={row.document_type_name_ar!}
+            name={row.document_type_name_ar!}
             status={row.status as DocumentStatus}
             startDate={row.start_date}
             expiryDate={row.expiry_date}
@@ -81,7 +77,7 @@ export async function BranchChecklist({
         className="flex items-center justify-between rounded-2xl border border-line bg-white px-4 py-3 shadow-sm hover:bg-cream"
       >
         <span className="text-sm font-medium text-ink">{t.employeeDocuments}</span>
-        <span className="text-sm text-muted">{forwardArrow(locale)}</span>
+        <span className="text-sm text-muted">{ARROW_FORWARD}</span>
       </Link>
     </div>
   );

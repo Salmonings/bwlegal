@@ -4,9 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { BranchChecklist } from "@/components/branch-checklist";
 import { LogoutButton } from "@/components/logout-button";
-import { LanguageToggle } from "@/components/language-toggle";
 import { IssueCountBadge } from "@/components/issue-count-badge";
-import { getDictionary, backArrow } from "@/lib/i18n";
+import { t, ARROW_BACK } from "@/lib/i18n";
 
 export default async function BranchPage({
   params,
@@ -21,7 +20,6 @@ export default async function BranchPage({
     redirect("/");
   }
 
-  const { locale, t } = await getDictionary();
   const supabase = await createClient();
   const { data: branch } = await supabase
     .from("branches")
@@ -38,7 +36,7 @@ export default async function BranchPage({
           <div>
             {profile.role === "legal_admin" && (
               <Link href="/" className="text-xs text-muted hover:text-orange">
-                {backArrow(locale)} {t.allBranches}
+                {ARROW_BACK} {t.allBranches}
               </Link>
             )}
             <h1 className="text-lg font-bold text-ink">{branch.name}</h1>
@@ -46,13 +44,12 @@ export default async function BranchPage({
           <IssueCountBadge branchId={branchId} />
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
 
       <main className="p-4 sm:p-6">
-        <BranchChecklist branchId={branchId} canEdit t={t} locale={locale} />
+        <BranchChecklist branchId={branchId} canEdit t={t} />
       </main>
     </div>
   );

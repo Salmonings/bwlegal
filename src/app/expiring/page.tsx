@@ -3,10 +3,9 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
-import { LanguageToggle } from "@/components/language-toggle";
 import { StatusBadge, type DocumentStatus } from "@/components/status-badge";
 import { daysFromToday } from "@/lib/dates";
-import { getDictionary, backArrow } from "@/lib/i18n";
+import { t, ARROW_BACK } from "@/lib/i18n";
 
 type Scope = "company" | "employee";
 
@@ -29,7 +28,6 @@ export default async function ExpiringPage({
   if (!profile) redirect("/login");
   if (profile.role !== "legal_admin") redirect("/");
 
-  const { locale, t } = await getDictionary();
   const { branchId, documentType, status } = await searchParams;
   const supabase = await createClient();
 
@@ -39,8 +37,8 @@ export default async function ExpiringPage({
 
   const [{ data: branches }, { data: documentTypes }, { data: employeeDocumentTypes }] = await Promise.all([
     supabase.from("branches").select("id, name").order("name"),
-    supabase.from("document_types").select("id, name_en").order("display_order"),
-    supabase.from("employee_document_types").select("id, name_en").order("display_order"),
+    supabase.from("document_types").select("id, name_ar").order("display_order"),
+    supabase.from("employee_document_types").select("id, name_ar").order("display_order"),
   ]);
 
   const branchNameById = new Map((branches ?? []).map((b) => [b.id, b.name]));
@@ -64,7 +62,7 @@ export default async function ExpiringPage({
         key: `document-${r.document_id}`,
         branchId: r.branch_id!,
         branchName: r.branch_name!,
-        typeLabel: r.document_type_name_en!,
+        typeLabel: r.document_type_name_ar!,
         status: r.status as DocumentStatus,
         expiryDate: r.expiry_date!,
         href: `/branches/${r.branch_id}`,
@@ -86,7 +84,7 @@ export default async function ExpiringPage({
         key: `employee_document-${r.employee_document_id}`,
         branchId: r.branch_id!,
         branchName: branchNameById.get(r.branch_id!) ?? "—",
-        typeLabel: `${r.employee_document_type_name_en} — ${r.employee_full_name}`,
+        typeLabel: `${r.employee_document_type_name_ar} — ${r.employee_full_name}`,
         status: r.status as DocumentStatus,
         expiryDate: r.expiry_date!,
         href: `/branches/${r.branch_id}/employees/${r.employee_id}`,
@@ -101,12 +99,11 @@ export default async function ExpiringPage({
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div>
           <Link href="/" className="text-xs text-muted hover:text-orange">
-            {backArrow(locale)} {t.dashboard}
+            {ARROW_BACK} {t.dashboard}
           </Link>
           <h1 className="text-lg font-bold text-ink">{t.expiringExpiredTitle}</h1>
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
@@ -140,14 +137,14 @@ export default async function ExpiringPage({
               <optgroup label={t.companyDocuments}>
                 {documentTypes?.map((dt) => (
                   <option key={dt.id} value={`company:${dt.id}`}>
-                    {dt.name_en}
+                    {dt.name_ar}
                   </option>
                 ))}
               </optgroup>
               <optgroup label={t.employeeDocumentsGroup}>
                 {employeeDocumentTypes?.map((dt) => (
                   <option key={dt.id} value={`employee:${dt.id}`}>
-                    {dt.name_en}
+                    {dt.name_ar}
                   </option>
                 ))}
               </optgroup>
@@ -195,13 +192,7 @@ export default async function ExpiringPage({
               {rows.map((row) => {
                 const days = daysFromToday(row.expiryDate);
                 const daysLabel =
-                  locale === "ar"
-                    ? days < 0
-                      ? `منتهية منذ ${Math.abs(days)} يوم`
-                      : `${days} يوم متبقٍ`
-                    : days < 0
-                      ? `Expired ${Math.abs(days)}d ago`
-                      : `${days}d left`;
+                  days < 0 ? `منتهية منذ ${Math.abs(days)} يوم` : `${days} يوم متبقٍ`;
                 return (
                   <tr key={row.key} className="border-b border-line last:border-b-0 hover:bg-cream">
                     <td className="px-4 py-2">

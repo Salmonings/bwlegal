@@ -6,13 +6,13 @@ function renderItemsHtml(items: DueReminderItem[]) {
   const rows = items
     .map((i) => {
       const days = daysFromToday(i.expiryDate);
-      const remaining = days < 0 ? `Expired ${Math.abs(days)}d ago` : `${days}d left`;
+      const remaining = days < 0 ? `منتهية منذ ${Math.abs(days)} يوم` : `${days} يوم متبقٍ`;
       return `<tr><td>${i.branchName}</td><td>${i.label}</td><td>${i.expiryDate}</td><td>${remaining}</td></tr>`;
     })
     .join("");
 
-  return `<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
-    <thead><tr><th>Branch</th><th>Document</th><th>Expiry date</th><th>Status</th></tr></thead>
+  return `<table dir="rtl" border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:14px">
+    <thead><tr><th>الفرع</th><th>المستند</th><th>تاريخ الانتهاء</th><th>الحالة</th></tr></thead>
     <tbody>${rows}</tbody>
   </table>`;
 }
@@ -30,7 +30,7 @@ export async function sendReminderDigest(to: string, items: DueReminderItem[]): 
   const { error } = await resend.emails.send({
     from,
     to,
-    subject: `Compliance reminder: ${items.length} document(s) need attention`,
+    subject: `تذكير بالالتزام: ${items.length} مستند يحتاج إلى مراجعة`,
     html: renderItemsHtml(items),
   });
 

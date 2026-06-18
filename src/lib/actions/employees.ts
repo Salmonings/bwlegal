@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { t } from "@/lib/i18n";
 
 function canEditBranch(
   profile: { role: string; branch_id: string | null },
@@ -14,16 +15,16 @@ function canEditBranch(
 
 export async function createEmployeeAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "Not signed in." };
+  if (!profile) return { error: t.errorNotSignedIn };
 
   const branchId = String(formData.get("branchId"));
   const fullName = (formData.get("fullName") as string)?.trim();
   const title = (formData.get("title") as string)?.trim() || null;
 
   if (!canEditBranch(profile, branchId)) {
-    return { error: "You don't have access to this branch." };
+    return { error: t.errorNoBranchAccess };
   }
-  if (!fullName) return { error: "Name is required." };
+  if (!fullName) return { error: t.errorNameRequired };
 
   const supabase = await createClient();
   const { data: inserted, error } = await supabase
@@ -47,7 +48,7 @@ export async function createEmployeeAction(formData: FormData) {
 
 export async function updateEmployeeAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "Not signed in." };
+  if (!profile) return { error: t.errorNotSignedIn };
 
   const branchId = String(formData.get("branchId"));
   const employeeId = String(formData.get("employeeId"));
@@ -55,9 +56,9 @@ export async function updateEmployeeAction(formData: FormData) {
   const title = (formData.get("title") as string)?.trim() || null;
 
   if (!canEditBranch(profile, branchId)) {
-    return { error: "You don't have access to this branch." };
+    return { error: t.errorNoBranchAccess };
   }
-  if (!fullName) return { error: "Name is required." };
+  if (!fullName) return { error: t.errorNameRequired };
 
   const supabase = await createClient();
   const { error } = await supabase
@@ -81,14 +82,14 @@ export async function updateEmployeeAction(formData: FormData) {
 
 export async function setEmployeeActiveAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile) return { error: "Not signed in." };
+  if (!profile) return { error: t.errorNotSignedIn };
 
   const branchId = String(formData.get("branchId"));
   const employeeId = String(formData.get("employeeId"));
   const isActive = formData.get("isActive") === "true";
 
   if (!canEditBranch(profile, branchId)) {
-    return { error: "You don't have access to this branch." };
+    return { error: t.errorNoBranchAccess };
   }
 
   const supabase = await createClient();

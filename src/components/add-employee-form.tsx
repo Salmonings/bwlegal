@@ -2,7 +2,7 @@
 
 import { useActionState, useRef } from "react";
 import { createEmployeeAction } from "@/lib/actions/employees";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 type ActionState = { error: string | null };
 

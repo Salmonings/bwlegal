@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getCurrentProfile } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { t } from "@/lib/i18n";
 
 function generateTempPassword() {
   return randomBytes(9).toString("base64").replace(/[+/=]/g, "x");
@@ -13,19 +14,19 @@ function generateTempPassword() {
 
 export async function createUserAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== "legal_admin") return { error: "Not authorized.", tempPassword: null };
+  if (!profile || profile.role !== "legal_admin") return { error: t.errorNotAuthorized, tempPassword: null };
 
   const email = (formData.get("email") as string)?.trim();
   const fullName = (formData.get("fullName") as string)?.trim();
   const role = formData.get("role") as string;
   const branchId = (formData.get("branchId") as string) || null;
 
-  if (!email || !fullName) return { error: "Email and name are required.", tempPassword: null };
+  if (!email || !fullName) return { error: t.errorEmailNameRequired, tempPassword: null };
   if (role !== "legal_admin" && role !== "branch_manager") {
-    return { error: "Invalid role.", tempPassword: null };
+    return { error: t.errorInvalidRole, tempPassword: null };
   }
   if (role === "branch_manager" && !branchId) {
-    return { error: "Branch is required for a branch manager.", tempPassword: null };
+    return { error: t.errorBranchRequiredForManager, tempPassword: null };
   }
 
   const admin = createAdminClient();
@@ -58,17 +59,17 @@ export async function createUserAction(formData: FormData) {
 
 export async function updateUserAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== "legal_admin") return { error: "Not authorized." };
+  if (!profile || profile.role !== "legal_admin") return { error: t.errorNotAuthorized };
 
   const id = String(formData.get("id"));
   const fullName = (formData.get("fullName") as string)?.trim();
   const role = formData.get("role") as string;
   const branchId = (formData.get("branchId") as string) || null;
 
-  if (!fullName) return { error: "Name is required." };
-  if (role !== "legal_admin" && role !== "branch_manager") return { error: "Invalid role." };
+  if (!fullName) return { error: t.errorNameRequired };
+  if (role !== "legal_admin" && role !== "branch_manager") return { error: t.errorInvalidRole };
   if (role === "branch_manager" && !branchId) {
-    return { error: "Branch is required for a branch manager." };
+    return { error: t.errorBranchRequiredForManager };
   }
 
   const supabase = await createClient();
@@ -96,10 +97,10 @@ export async function updateUserAction(formData: FormData) {
 
 export async function removeUserAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== "legal_admin") return { error: "Not authorized." };
+  if (!profile || profile.role !== "legal_admin") return { error: t.errorNotAuthorized };
 
   const id = String(formData.get("id"));
-  if (id === profile.id) return { error: "You can't remove your own account." };
+  if (id === profile.id) return { error: t.errorCannotRemoveOwnAccount };
 
   const admin = createAdminClient();
   const { error } = await admin.auth.admin.deleteUser(id);

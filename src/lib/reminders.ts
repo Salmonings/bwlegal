@@ -39,7 +39,7 @@ export async function findDueReminders(): Promise<DueReminderItem[]> {
       entityId: row.document_id,
       branchId: row.branch_id!,
       branchName: row.branch_name!,
-      label: row.document_type_name_en!,
+      label: row.document_type_name_ar!,
       expiryDate: row.expiry_date,
       daysRemaining: daysFromToday(row.expiry_date),
       stage,
@@ -57,7 +57,7 @@ export async function findDueReminders(): Promise<DueReminderItem[]> {
       entityId: row.employee_document_id,
       branchId: row.branch_id!,
       branchName: "", // resolved by the caller via a branches lookup
-      label: `${row.employee_document_type_name_en} — ${row.employee_full_name}`,
+      label: `${row.employee_document_type_name_ar} — ${row.employee_full_name}`,
       expiryDate: row.expiry_date,
       daysRemaining: daysFromToday(row.expiry_date),
       stage,
@@ -72,7 +72,7 @@ export async function findDueReminders(): Promise<DueReminderItem[]> {
       .in("id", branchIdsNeedingName);
     const nameById = new Map((branches ?? []).map((b) => [b.id, b.name]));
     for (const item of items) {
-      if (!item.branchName) item.branchName = nameById.get(item.branchId) ?? "Unknown branch";
+      if (!item.branchName) item.branchName = nameById.get(item.branchId) ?? "فرع غير معروف";
     }
   }
 

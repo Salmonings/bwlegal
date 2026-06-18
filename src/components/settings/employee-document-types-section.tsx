@@ -6,7 +6,7 @@ import {
   updateEmployeeDocumentTypeAction,
   setEmployeeDocumentTypeActiveAction,
 } from "@/lib/actions/employee-document-types";
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 export async function EmployeeDocumentTypesSection({ t }: { t: Dictionary }) {
   const supabase = await createClient();
@@ -30,8 +30,7 @@ export async function EmployeeDocumentTypesSection({ t }: { t: Dictionary }) {
           <CatalogRow
             key={dt.id}
             id={dt.id}
-            nameEn={dt.name_en}
-            nameAr={dt.name_ar}
+            name={dt.name_ar}
             displayOrder={dt.display_order}
             defaultLeadTimeDays={dt.default_lead_time_days}
             isActive={dt.is_active}

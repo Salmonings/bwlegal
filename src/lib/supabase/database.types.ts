@@ -97,7 +97,6 @@ export type Database = {
           id: string
           is_active: boolean
           name_ar: string
-          name_en: string
         }
         Insert: {
           default_lead_time_days?: number
@@ -105,7 +104,6 @@ export type Database = {
           id?: string
           is_active?: boolean
           name_ar: string
-          name_en: string
         }
         Update: {
           default_lead_time_days?: number
@@ -113,7 +111,6 @@ export type Database = {
           id?: string
           is_active?: boolean
           name_ar?: string
-          name_en?: string
         }
         Relationships: []
       }
@@ -202,7 +199,6 @@ export type Database = {
           id: string
           is_active: boolean
           name_ar: string
-          name_en: string
         }
         Insert: {
           default_lead_time_days?: number
@@ -210,7 +206,6 @@ export type Database = {
           id?: string
           is_active?: boolean
           name_ar: string
-          name_en: string
         }
         Update: {
           default_lead_time_days?: number
@@ -218,7 +213,6 @@ export type Database = {
           id?: string
           is_active?: boolean
           name_ar?: string
-          name_en?: string
         }
         Relationships: []
       }
@@ -418,7 +412,6 @@ export type Database = {
           document_id: string | null
           document_type_id: string | null
           document_type_name_ar: string | null
-          document_type_name_en: string | null
           expiry_date: string | null
           file_path: string | null
           is_not_applicable: boolean | null
@@ -435,7 +428,6 @@ export type Database = {
           employee_document_id: string | null
           employee_document_type_id: string | null
           employee_document_type_name_ar: string | null
-          employee_document_type_name_en: string | null
           employee_full_name: string | null
           employee_id: string | null
           employee_title: string | null

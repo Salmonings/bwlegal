@@ -1,4 +1,4 @@
-import type { Dictionary } from "@/lib/i18n/en";
+import type { Dictionary } from "@/lib/i18n";
 
 export type DocumentStatus = "valid" | "expiring_soon" | "expired" | "missing" | "na";
 

@@ -3,9 +3,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { LogoutButton } from "@/components/logout-button";
-import { LanguageToggle } from "@/components/language-toggle";
 import { EmployeeChecklist } from "@/components/employee-checklist";
-import { getDictionary, backArrow } from "@/lib/i18n";
+import { t, ARROW_BACK } from "@/lib/i18n";
 
 export default async function EmployeeDetailPage({
   params,
@@ -20,7 +19,6 @@ export default async function EmployeeDetailPage({
     redirect("/");
   }
 
-  const { locale, t } = await getDictionary();
   const supabase = await createClient();
   const { data: employee } = await supabase
     .from("employees")
@@ -35,13 +33,12 @@ export default async function EmployeeDetailPage({
       <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div>
           <Link href={`/branches/${branchId}/employees`} className="text-xs text-muted hover:text-orange">
-            {backArrow(locale)} {t.employees}
+            {ARROW_BACK} {t.employees}
           </Link>
           <h1 className="text-lg font-bold text-ink">{employee.full_name}</h1>
           {employee.title && <p className="text-sm text-muted">{employee.title}</p>}
         </div>
         <div className="flex flex-wrap items-center gap-3">
-          <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>

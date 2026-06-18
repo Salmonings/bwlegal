@@ -4,10 +4,10 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { t } from "@/lib/i18n";
 
 function parseFields(formData: FormData) {
   return {
-    nameEn: (formData.get("nameEn") as string)?.trim(),
     nameAr: (formData.get("nameAr") as string)?.trim(),
     displayOrder: Number(formData.get("displayOrder") ?? 0),
     defaultLeadTimeDays: Number(formData.get("defaultLeadTimeDays") ?? 30),
@@ -16,16 +16,15 @@ function parseFields(formData: FormData) {
 
 export async function createEmployeeDocumentTypeAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== "legal_admin") return { error: "Not authorized." };
+  if (!profile || profile.role !== "legal_admin") return { error: t.errorNotAuthorized };
 
-  const { nameEn, nameAr, displayOrder, defaultLeadTimeDays } = parseFields(formData);
-  if (!nameEn || !nameAr) return { error: "English and Arabic names are required." };
+  const { nameAr, displayOrder, defaultLeadTimeDays } = parseFields(formData);
+  if (!nameAr) return { error: t.errorDocumentNameRequired };
 
   const supabase = await createClient();
   const { data: inserted, error } = await supabase
     .from("employee_document_types")
     .insert({
-      name_en: nameEn,
       name_ar: nameAr,
       display_order: displayOrder,
       default_lead_time_days: defaultLeadTimeDays,
@@ -39,7 +38,7 @@ export async function createEmployeeDocumentTypeAction(formData: FormData) {
     action: "employee_document_type.create",
     entityType: "employee_document_type",
     entityId: inserted.id,
-    metadata: { name_en: nameEn },
+    metadata: { name_ar: nameAr },
   });
 
   revalidatePath("/settings");
@@ -48,17 +47,16 @@ export async function createEmployeeDocumentTypeAction(formData: FormData) {
 
 export async function updateEmployeeDocumentTypeAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== "legal_admin") return { error: "Not authorized." };
+  if (!profile || profile.role !== "legal_admin") return { error: t.errorNotAuthorized };
 
   const id = String(formData.get("id"));
-  const { nameEn, nameAr, displayOrder, defaultLeadTimeDays } = parseFields(formData);
-  if (!nameEn || !nameAr) return { error: "English and Arabic names are required." };
+  const { nameAr, displayOrder, defaultLeadTimeDays } = parseFields(formData);
+  if (!nameAr) return { error: t.errorDocumentNameRequired };
 
   const supabase = await createClient();
   const { error } = await supabase
     .from("employee_document_types")
     .update({
-      name_en: nameEn,
       name_ar: nameAr,
       display_order: displayOrder,
       default_lead_time_days: defaultLeadTimeDays,
@@ -71,7 +69,7 @@ export async function updateEmployeeDocumentTypeAction(formData: FormData) {
     action: "employee_document_type.update",
     entityType: "employee_document_type",
     entityId: id,
-    metadata: { name_en: nameEn },
+    metadata: { name_ar: nameAr },
   });
 
   revalidatePath("/settings");
@@ -80,7 +78,7 @@ export async function updateEmployeeDocumentTypeAction(formData: FormData) {
 
 export async function setEmployeeDocumentTypeActiveAction(formData: FormData) {
   const profile = await getCurrentProfile();
-  if (!profile || profile.role !== "legal_admin") return { error: "Not authorized." };
+  if (!profile || profile.role !== "legal_admin") return { error: t.errorNotAuthorized };
 
   const id = String(formData.get("id"));
   const isActive = formData.get("isActive") === "true";

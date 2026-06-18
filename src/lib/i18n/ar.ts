@@ -1,6 +1,4 @@
-import type { Dictionary } from "@/lib/i18n/en";
-
-export const ar: Dictionary = {
+export const ar = {
   // common
   appName: "متابعة الالتزام",
   logout: "تسجيل الخروج",
@@ -69,6 +67,8 @@ export const ar: Dictionary = {
   documentType: "نوع المستند",
   expiryDate: "تاريخ الانتهاء",
   days: "الأيام",
+  daysAgoSuffix: "منذ",
+  daysLeftSuffix: "متبقي",
   noResults: "لا توجد نتائج مطابقة لهذه الفلاتر.",
 
   // settings
@@ -79,8 +79,7 @@ export const ar: Dictionary = {
   branchName: "اسم الفرع",
   addBranch: "إضافة فرع",
   rename: "إعادة تسمية",
-  englishName: "الاسم بالإنجليزية",
-  arabicName: "الاسم بالعربية",
+  documentTypeName: "اسم المستند",
   displayOrder: "ترتيب العرض",
   leadTimeDays: "مدة التنبيه (أيام)",
   role: "الدور",
@@ -92,4 +91,28 @@ export const ar: Dictionary = {
   remove: "إزالة",
   removing: "جارٍ الإزالة...",
   tempPasswordMsg: "تم إنشاء المستخدم. شارك كلمة المرور المؤقتة هذه معه الآن — لن تظهر مرة أخرى:",
+
+  // metadata / misc
+  appTitle: "متابعة الالتزام",
+  appDescription: "متابعة المستندات القانونية ومستندات الالتزام للفروع",
+  noDataYet: "لا توجد بيانات حتى الآن.",
+  noBranchAccess: "لم يتم العثور على الفرع، أو لا تملك صلاحية الوصول إليه.",
+  noEmployeeAccess: "لم يتم العثور على الموظف، أو لا تملك صلاحية الوصول إليه.",
+
+  // errors (server action messages)
+  errorNotAuthorized: "غير مخوّل بهذا الإجراء.",
+  errorNotSignedIn: "لم يتم تسجيل الدخول.",
+  errorNameRequired: "الاسم مطلوب.",
+  errorDocumentNameRequired: "اسم المستند مطلوب.",
+  errorNoBranchAccess: "لا تملك صلاحية الوصول لهذا الفرع.",
+  errorNoEmployeeAccess: "لا تملك صلاحية الوصول لهذا الموظف.",
+  errorFileTooLarge: "حجم الملف أكبر من 15 ميغابايت.",
+  errorInvalidFileType: "يُسمح فقط بملفات PDF و JPG و PNG.",
+  errorUploadFailed: "فشل رفع الملف",
+  errorEmailNameRequired: "البريد الإلكتروني والاسم مطلوبان.",
+  errorInvalidRole: "دور غير صالح.",
+  errorBranchRequiredForManager: "الفرع مطلوب لمدير الفرع.",
+  errorCannotRemoveOwnAccount: "لا يمكنك إزالة حسابك الخاص.",
 };
+
+export type Dictionary = typeof ar;

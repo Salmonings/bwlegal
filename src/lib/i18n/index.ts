@@ -1,30 +1,11 @@
-import { cookies } from "next/headers";
-import { en, type Dictionary } from "@/lib/i18n/en";
-import { ar } from "@/lib/i18n/ar";
+import { ar, type Dictionary } from "@/lib/i18n/ar";
 
-export type Locale = "en" | "ar";
+export type { Dictionary };
 
-const dictionaries: Record<Locale, Dictionary> = { en, ar };
+export const t: Dictionary = ar;
 
-export async function getLocale(): Promise<Locale> {
-  const cookieStore = await cookies();
-  return cookieStore.get("locale")?.value === "ar" ? "ar" : "en";
-}
+export const DIR = "rtl" as const;
 
-export async function getDictionary(): Promise<{ locale: Locale; t: Dictionary }> {
-  const locale = await getLocale();
-  return { locale, t: dictionaries[locale] };
-}
-
-export function dirFor(locale: Locale) {
-  return locale === "ar" ? "rtl" : "ltr";
-}
-
-// In RTL, a "back" arrow should point right, not left.
-export function backArrow(locale: Locale) {
-  return locale === "ar" ? "→" : "←";
-}
-
-export function forwardArrow(locale: Locale) {
-  return locale === "ar" ? "←" : "→";
-}
+// App is Arabic-only and right-to-left, so "back" points right.
+export const ARROW_BACK = "→";
+export const ARROW_FORWARD = "←";

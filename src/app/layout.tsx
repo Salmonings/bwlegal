@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Hanken_Grotesk } from "next/font/google";
-import { getLocale, dirFor } from "@/lib/i18n";
+import { t } from "@/lib/i18n";
 import "./globals.css";
 
 const hankenGrotesk = Hanken_Grotesk({
@@ -10,19 +10,17 @@ const hankenGrotesk = Hanken_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Branch Compliance",
-  description: "Branch legal & compliance document tracker",
+  title: t.appTitle,
+  description: t.appDescription,
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const locale = await getLocale();
-
   return (
-    <html lang={locale} dir={dirFor(locale)} className={`${hankenGrotesk.variable} h-full antialiased`}>
+    <html lang="ar" dir="rtl" className={`${hankenGrotesk.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
