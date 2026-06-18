@@ -8,12 +8,20 @@ const STATUS_STYLES: Record<DocumentStatus, string> = {
   na: "bg-gray-100 text-gray-500",
 };
 
-const STATUS_LABELS: Record<DocumentStatus, string> = {
+export const STATUS_LABELS: Record<DocumentStatus, string> = {
   valid: "Valid",
   expiring_soon: "Expiring soon",
   expired: "Expired",
   missing: "Missing",
   na: "N/A",
+};
+
+export const STATUS_DOT_COLOR: Record<DocumentStatus, string> = {
+  valid: "bg-green-400",
+  expiring_soon: "bg-amber-400",
+  expired: "bg-red-500",
+  missing: "bg-gray-300",
+  na: "bg-gray-200",
 };
 
 export function StatusBadge({ status }: { status: DocumentStatus }) {
