@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCurrentProfile } from "@/lib/auth";
@@ -22,7 +23,14 @@ export default async function DashboardPage() {
           </div>
           <IssueCountBadge branchId={profile.role === "branch_manager" ? profile.branch_id ?? undefined : undefined} />
         </div>
-        <LogoutButton />
+        <div className="flex items-center gap-3">
+          {profile.role === "legal_admin" && (
+            <Link href="/settings" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+              Settings
+            </Link>
+          )}
+          <LogoutButton />
+        </div>
       </header>
 
       <main className="p-6">

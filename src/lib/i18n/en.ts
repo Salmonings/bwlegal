@@ -1,0 +1,96 @@
+export const en = {
+  // common
+  appName: "Branch Compliance",
+  logout: "Log out",
+  settings: "Settings",
+  dashboard: "Dashboard",
+  save: "Save",
+  saving: "Saving...",
+  cancel: "Cancel",
+  edit: "Edit",
+  add: "Add",
+  filter: "Filter",
+  clear: "Clear",
+  notes: "Notes",
+  status: "Status",
+  document: "Document",
+  dates: "Dates",
+  file: "File",
+  viewCurrentFile: "View current file",
+  back: "Back",
+  allBranches: "All branches",
+  branch: "Branch",
+
+  // status labels
+  statusValid: "Valid",
+  statusExpiringSoon: "Expiring soon",
+  statusExpired: "Expired",
+  statusMissing: "Missing",
+  statusNa: "N/A",
+
+  // login
+  loginSubtitle: "Sign in to manage compliance documents",
+  email: "Email",
+  password: "Password",
+  signIn: "Sign in",
+  signingIn: "Signing in...",
+
+  // dashboard
+  complianceMatrix: "Compliance matrix",
+  complianceChecklist: "compliance checklist",
+  viewExpiringExpired: "View expiring & expired",
+  expired: "Expired",
+  expiringSoon: "Expiring soon",
+  employeeDocuments: "Employee Documents",
+  legalAdmin: "Legal Admin",
+  branchManager: "Branch Manager",
+  issues: "Issues",
+  allBranchesLink: "All branches",
+
+  // employees
+  employees: "Employees",
+  name: "Name",
+  title: "Title",
+  addEmployee: "Add employee",
+  adding: "Adding...",
+  deactivate: "Deactivate",
+  reactivate: "Reactivate",
+  inactive: "Inactive",
+  noEmployeesYet: "No employees yet.",
+
+  // expiring page
+  expiringExpiredTitle: "Expiring & Expired Documents",
+  allDocumentTypes: "All document types",
+  companyDocuments: "Company documents",
+  employeeDocumentsGroup: "Employee documents",
+  expiringPlusExpired: "Expiring soon + Expired",
+  documentType: "Document Type",
+  expiryDate: "Expiry Date",
+  days: "Days",
+  noResults: "Nothing expiring or expired matches these filters.",
+
+  // settings
+  branches: "Branches",
+  companyDocumentTypes: "Company document types",
+  employeeDocumentTypesHeading: "Employee document types",
+  usersRoles: "Users & roles",
+  branchName: "Branch name",
+  addBranch: "Add branch",
+  rename: "Rename",
+  englishName: "English name",
+  arabicName: "Arabic name",
+  displayOrder: "Display order",
+  leadTimeDays: "Lead time (days)",
+  role: "Role",
+  branchManagerRole: "Branch manager",
+  legalAdminRole: "Legal admin",
+  selectBranch: "Select branch...",
+  createUser: "Create user",
+  creating: "Creating...",
+  remove: "Remove",
+  removing: "Removing...",
+  tempPasswordMsg:
+    "User created. Share this temporary password with them now — it won't be shown again:",
+};
+
+export type Dictionary = typeof en;

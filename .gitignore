@@ -13,6 +13,10 @@
 # testing
 /coverage
 
+#style copy
+/copy-this-style/
+
+
 # next.js
 /.next/
 /out/

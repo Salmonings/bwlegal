@@ -1,0 +1,68 @@
+"use client";
+
+import { useActionState, useRef } from "react";
+
+type ActionState = { error: string | null };
+
+export function AddCatalogForm({
+  createAction,
+}: {
+  createAction: (formData: FormData) => Promise<ActionState>;
+}) {
+  const [state, formAction, pending] = useActionState<ActionState, FormData>(
+    async (_prev, formData) => createAction(formData),
+    { error: null }
+  );
+  const formRef = useRef<HTMLFormElement>(null);
+
+  return (
+    <form
+      ref={formRef}
+      action={async (formData) => {
+        await formAction(formData);
+        formRef.current?.reset();
+      }}
+      className="flex flex-wrap items-end gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm"
+    >
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-gray-500">English name</label>
+        <input name="nameEn" required className="rounded border border-gray-300 px-2 py-1 text-sm" />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-gray-500">Arabic name</label>
+        <input
+          name="nameAr"
+          dir="rtl"
+          required
+          className="rounded border border-gray-300 px-2 py-1 text-sm"
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-gray-500">Display order</label>
+        <input
+          name="displayOrder"
+          type="number"
+          defaultValue={0}
+          className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+        />
+      </div>
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-medium text-gray-500">Lead time (days)</label>
+        <input
+          name="defaultLeadTimeDays"
+          type="number"
+          defaultValue={30}
+          className="w-24 rounded border border-gray-300 px-2 py-1 text-sm"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={pending}
+        className="rounded-md bg-gray-900 px-3 py-1.5 text-sm font-medium text-white disabled:opacity-50"
+      >
+        {pending ? "Adding..." : "Add"}
+      </button>
+      {state.error && <p className="text-sm text-red-600">{state.error}</p>}
+    </form>
+  );
+}
