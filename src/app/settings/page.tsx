@@ -18,20 +18,20 @@ export default async function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-cream">
-      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div>
           <Link href="/" className="text-xs text-muted hover:text-orange">
             {backArrow(locale)} {t.dashboard}
           </Link>
           <h1 className="text-lg font-bold text-ink">{t.settings}</h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
 
-      <main className="flex flex-col gap-10 p-6">
+      <main className="flex flex-col gap-10 p-4 sm:p-6">
         <section className="flex flex-col gap-3">
           <h2 className="text-base font-semibold text-ink">{t.branches}</h2>
           <BranchesSection t={t} />

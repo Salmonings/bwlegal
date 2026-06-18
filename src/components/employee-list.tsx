@@ -45,7 +45,7 @@ export async function EmployeeList({
       {canEdit && <AddEmployeeForm branchId={branchId} t={t} />}
 
       <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
-        <div className="grid grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted">
+        <div className="hidden grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted sm:grid">
           <div className="col-span-4">{t.name}</div>
           <div className="col-span-3">{t.title}</div>
           <div className="col-span-2">{t.status}</div>

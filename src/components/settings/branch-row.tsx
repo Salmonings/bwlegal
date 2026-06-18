@@ -22,28 +22,28 @@ export function BranchRow({ id, name, t }: { id: string; name: string; t: Dictio
 
   if (editing) {
     return (
-      <form action={formAction} className="flex items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0">
+      <form action={formAction} className="flex flex-wrap items-center gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:gap-3">
         <input type="hidden" name="branchId" value={id} />
         <input
           name="name"
           defaultValue={name}
-          className="flex-1 rounded-lg border border-line px-2 py-1 text-sm"
+          className="min-w-0 flex-1 rounded-lg border border-line px-2 py-1.5 text-sm sm:py-1"
         />
         <button
           type="submit"
           disabled={pending}
-          className="rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white hover:bg-orange disabled:opacity-50"
+          className="shrink-0 rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white hover:bg-orange disabled:opacity-50"
         >
           {pending ? t.saving : t.save}
         </button>
         <button
           type="button"
           onClick={() => setEditing(false)}
-          className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink"
+          className="shrink-0 rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink"
         >
           {t.cancel}
         </button>
-        {state.error && <p className="text-xs text-red-600">{state.error}</p>}
+        {state.error && <p className="w-full text-xs text-red-600">{state.error}</p>}
       </form>
     );
   }

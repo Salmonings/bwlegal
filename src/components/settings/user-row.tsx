@@ -47,19 +47,19 @@ export function UserRow(props: Props) {
     return (
       <form
         action={updateFormAction}
-        className="grid grid-cols-12 items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0"
+        className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3"
       >
         <input type="hidden" name="id" value={props.id} />
         <input
           name="fullName"
           defaultValue={props.fullName}
-          className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
         />
         <select
           name="role"
           value={role}
           onChange={(e) => setRole(e.target.value as Props["role"])}
-          className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
         >
           <option value="branch_manager">{t.branchManagerRole}</option>
           <option value="legal_admin">{t.legalAdminRole}</option>
@@ -68,7 +68,7 @@ export function UserRow(props: Props) {
           <select
             name="branchId"
             defaultValue={props.branchId ?? ""}
-            className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
+            className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
           >
             <option value="">{t.selectBranch}</option>
             {props.branches.map((b) => (
@@ -78,9 +78,9 @@ export function UserRow(props: Props) {
             ))}
           </select>
         ) : (
-          <div className="col-span-3" />
+          <div className="hidden sm:col-span-3" />
         )}
-        <div className="col-span-3 flex justify-end gap-2">
+        <div className="flex justify-end gap-2 sm:col-span-3">
           <button
             type="submit"
             disabled={updatePending}
@@ -96,7 +96,7 @@ export function UserRow(props: Props) {
             {t.cancel}
           </button>
         </div>
-        {updateState.error && <p className="col-span-12 text-xs text-red-600">{updateState.error}</p>}
+        {updateState.error && <p className="text-xs text-red-600 sm:col-span-12">{updateState.error}</p>}
       </form>
     );
   }
@@ -104,16 +104,18 @@ export function UserRow(props: Props) {
   const branchName = props.branches.find((b) => b.id === props.branchId)?.name;
 
   return (
-    <div className="grid grid-cols-12 items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0">
-      <div className="col-span-3 flex flex-col">
+    <div className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3">
+      <div className="flex flex-col sm:col-span-3">
         <span className="font-medium text-ink">{props.fullName}</span>
         <span className="text-xs text-muted">{props.email}</span>
       </div>
-      <span className="col-span-3 text-muted">
-        {props.role === "legal_admin" ? t.legalAdminRole : t.branchManagerRole}
-      </span>
-      <span className="col-span-3 text-muted">{branchName ?? "—"}</span>
-      <div className="col-span-3 flex justify-end gap-2">
+      <div className="flex items-center justify-between gap-2 text-muted sm:contents">
+        <span className="sm:col-span-3">
+          {props.role === "legal_admin" ? t.legalAdminRole : t.branchManagerRole}
+        </span>
+        <span className="sm:col-span-3">{branchName ?? "—"}</span>
+      </div>
+      <div className="flex justify-end gap-2 sm:col-span-3">
         <button
           type="button"
           onClick={() => setEditing(true)}
@@ -141,7 +143,7 @@ export function UserRow(props: Props) {
           </form>
         )}
       </div>
-      {removeState.error && <p className="col-span-12 text-xs text-red-600">{removeState.error}</p>}
+      {removeState.error && <p className="text-xs text-red-600 sm:col-span-12">{removeState.error}</p>}
     </div>
   );
 }

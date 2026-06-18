@@ -17,7 +17,7 @@ export default async function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-cream">
-      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div className="flex items-center gap-2">
           <div>
             <h1 className="text-lg font-bold text-orange">{t.appName}</h1>
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
           </div>
           <IssueCountBadge branchId={profile.role === "branch_manager" ? profile.branch_id ?? undefined : undefined} />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           {profile.role === "legal_admin" && (
             <Link href="/settings" className="text-sm font-medium text-ink hover:text-orange">
               {t.settings}
@@ -38,7 +38,7 @@ export default async function DashboardPage() {
         </div>
       </header>
 
-      <main className="p-6">
+      <main className="p-4 sm:p-6">
         {profile.role === "legal_admin" ? (
           <AdminDashboard t={t} />
         ) : (

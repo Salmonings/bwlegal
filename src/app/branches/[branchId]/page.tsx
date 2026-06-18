@@ -33,7 +33,7 @@ export default async function BranchPage({
 
   return (
     <div className="min-h-screen bg-cream">
-      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div className="flex items-center gap-2">
           <div>
             {profile.role === "legal_admin" && (
@@ -45,13 +45,13 @@ export default async function BranchPage({
           </div>
           <IssueCountBadge branchId={branchId} />
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
 
-      <main className="p-6">
+      <main className="p-4 sm:p-6">
         <BranchChecklist branchId={branchId} canEdit t={t} locale={locale} />
       </main>
     </div>

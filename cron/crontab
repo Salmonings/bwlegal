@@ -1,0 +1,1 @@
+0 6 * * * /run-reminders.sh >> /var/log/cron.log 2>&1

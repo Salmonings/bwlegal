@@ -98,20 +98,20 @@ export default async function ExpiringPage({
 
   return (
     <div className="min-h-screen bg-cream">
-      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div>
           <Link href="/" className="text-xs text-muted hover:text-orange">
             {backArrow(locale)} {t.dashboard}
           </Link>
           <h1 className="text-lg font-bold text-ink">{t.expiringExpiredTitle}</h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
 
-      <main className="flex flex-col gap-4 p-6">
+      <main className="flex flex-col gap-4 p-4 sm:p-6">
         <form className="flex flex-wrap items-end gap-3 rounded-2xl border border-line bg-white p-4 shadow-sm">
           <div className="flex flex-col gap-1">
             <label className="text-xs font-medium text-muted">{t.branch}</label>

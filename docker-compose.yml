@@ -5,3 +5,12 @@ services:
     env_file: .env.local
     ports:
       - "127.0.0.1:3001:3000"
+
+  cron:
+    build: ./cron
+    restart: unless-stopped
+    depends_on:
+      - app
+    environment:
+      - APP_URL=http://app:3000
+    env_file: .env.local

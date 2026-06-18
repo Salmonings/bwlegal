@@ -46,7 +46,7 @@ export async function BranchChecklist({
   return (
     <div className="flex flex-col gap-4">
       <div className="overflow-x-auto rounded-2xl border border-line bg-white shadow-sm">
-        <div className="grid grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted">
+        <div className="hidden grid-cols-12 gap-3 border-b border-line bg-cream px-4 py-2 text-xs font-medium text-muted sm:grid">
           <div className="col-span-3">{t.document}</div>
           <div className="col-span-1">{t.status}</div>
           <div className="col-span-2">{t.dates}</div>

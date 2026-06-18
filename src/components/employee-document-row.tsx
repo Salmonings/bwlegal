@@ -38,7 +38,7 @@ export function EmployeeDocumentRow(props: Props) {
   return (
     <form
       action={formAction}
-      className="grid grid-cols-12 gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0"
+      className="flex flex-col gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center"
     >
       <input type="hidden" name="branchId" value={props.branchId} />
       <input type="hidden" name="employeeId" value={props.employeeId} />
@@ -47,35 +47,42 @@ export function EmployeeDocumentRow(props: Props) {
         <input type="hidden" name="existingDocumentId" value={props.existingDocumentId} />
       )}
 
-      <div className="col-span-3 flex flex-col">
-        <span className="font-medium text-ink">{props.nameEn}</span>
-        <span dir="rtl" className="text-xs text-muted">
-          {props.nameAr}
-        </span>
+      <div className="flex items-center justify-between gap-2 sm:col-span-3 sm:flex-col sm:items-start">
+        <div className="flex flex-col">
+          <span className="font-medium text-ink">{props.nameEn}</span>
+          <span dir="rtl" className="text-xs text-muted">
+            {props.nameAr}
+          </span>
+        </div>
+        <div className="sm:hidden">
+          <StatusBadge status={isNotApplicable ? "na" : props.status} t={t} />
+        </div>
       </div>
 
-      <div className="col-span-1 flex items-center">
+      <div className="hidden sm:col-span-1 sm:flex sm:items-center">
         <StatusBadge status={isNotApplicable ? "na" : props.status} t={t} />
       </div>
 
-      <div className="col-span-2 flex flex-col gap-1">
+      <div className="flex flex-col gap-1 sm:col-span-2">
+        <span className="text-xs font-medium text-muted sm:hidden">{t.dates}</span>
         <input
           type="date"
           name="startDate"
           defaultValue={props.startDate ?? ""}
           disabled={!props.canEdit}
-          className="rounded-lg border border-line px-2 py-1 text-xs disabled:bg-cream"
+          className="rounded-lg border border-line px-2 py-1.5 text-xs disabled:bg-cream sm:py-1"
         />
         <input
           type="date"
           name="expiryDate"
           defaultValue={props.expiryDate ?? ""}
           disabled={!props.canEdit}
-          className="rounded-lg border border-line px-2 py-1 text-xs disabled:bg-cream"
+          className="rounded-lg border border-line px-2 py-1.5 text-xs disabled:bg-cream sm:py-1"
         />
       </div>
 
-      <div className="col-span-2 flex flex-col gap-1">
+      <div className="flex flex-col gap-1 sm:col-span-2">
+        <span className="text-xs font-medium text-muted sm:hidden">{t.file}</span>
         <input
           type="file"
           name="file"
@@ -95,41 +102,42 @@ export function EmployeeDocumentRow(props: Props) {
         )}
       </div>
 
-      <div className="col-span-2">
+      <div className="sm:col-span-2">
+        <span className="text-xs font-medium text-muted sm:hidden">{t.notes}</span>
         <textarea
           name="notes"
           defaultValue={props.notes ?? ""}
           disabled={!props.canEdit}
           rows={2}
           placeholder={t.notes}
-          className="w-full resize-none rounded-lg border border-line px-2 py-1 text-xs disabled:bg-cream"
+          className="w-full resize-none rounded-lg border border-line px-2 py-1.5 text-xs disabled:bg-cream sm:py-1"
         />
       </div>
 
-      <div className="col-span-1 flex items-center gap-1">
-        <input
-          type="checkbox"
-          name="isNotApplicable"
-          checked={isNotApplicable}
-          onChange={(e) => setIsNotApplicable(e.target.checked)}
-          disabled={!props.canEdit}
-        />
-        <label className="text-xs text-muted">{t.statusNa}</label>
-      </div>
+      <div className="flex items-center justify-between gap-2 sm:col-span-2 sm:justify-self-end sm:gap-3">
+        <label className="flex items-center gap-1.5">
+          <input
+            type="checkbox"
+            name="isNotApplicable"
+            checked={isNotApplicable}
+            onChange={(e) => setIsNotApplicable(e.target.checked)}
+            disabled={!props.canEdit}
+          />
+          <span className="text-xs text-muted">{t.statusNa}</span>
+        </label>
 
-      <div className="col-span-1 flex items-start justify-end">
         {props.canEdit && (
           <button
             type="submit"
             disabled={pending}
-            className="rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white transition hover:bg-orange disabled:opacity-50"
+            className="rounded-full bg-ink px-3 py-1.5 text-xs font-medium text-white transition hover:bg-orange disabled:opacity-50"
           >
             {pending ? t.saving : t.save}
           </button>
         )}
       </div>
 
-      {state.error && <p className="col-span-12 text-xs text-red-600">{state.error}</p>}
+      {state.error && <p className="text-xs text-red-600 sm:col-span-12">{state.error}</p>}
     </form>
   );
 }

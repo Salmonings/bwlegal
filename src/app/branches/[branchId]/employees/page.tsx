@@ -28,7 +28,7 @@ export default async function EmployeesPage({
 
   return (
     <div className="min-h-screen bg-cream">
-      <header className="flex items-center justify-between border-b border-line bg-white px-6 py-4">
+      <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-white px-4 py-4 sm:px-6">
         <div>
           <Link href={`/branches/${branchId}`} className="text-xs text-muted hover:text-orange">
             {backArrow(locale)} {branch.name}
@@ -37,13 +37,13 @@ export default async function EmployeesPage({
             {branch.name} &mdash; {t.employees}
           </h1>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <LanguageToggle locale={locale} />
           <LogoutButton label={t.logout} />
         </div>
       </header>
 
-      <main className="p-6">
+      <main className="p-4 sm:p-6">
         <EmployeeList branchId={branchId} canEdit t={t} />
       </main>
     </div>

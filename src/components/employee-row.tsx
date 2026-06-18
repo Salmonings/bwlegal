@@ -49,63 +49,69 @@ export function EmployeeRow(props: Props) {
     wasUpdating.current = updatePending;
   }, [updatePending, updateState.error]);
 
-  return (
-    <div className="grid grid-cols-12 items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0">
-      {editing ? (
-        <form action={updateFormAction} className="col-span-9 grid grid-cols-9 items-center gap-3">
-          <input type="hidden" name="branchId" value={props.branchId} />
-          <input type="hidden" name="employeeId" value={props.employeeId} />
-          <input
-            name="fullName"
-            defaultValue={props.fullName}
-            className="col-span-4 rounded-lg border border-line px-2 py-1 text-sm"
-          />
-          <input
-            name="title"
-            defaultValue={props.title ?? ""}
-            placeholder={t.title}
-            className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
-          />
-          <div className="col-span-2 flex gap-2">
-            <button
-              type="submit"
-              disabled={updatePending}
-              className="rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white hover:bg-orange disabled:opacity-50"
-            >
-              {updatePending ? t.saving : t.save}
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditing(false)}
-              className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink"
-            >
-              {t.cancel}
-            </button>
-          </div>
-        </form>
-      ) : (
-        <>
-          <Link
-            href={`/branches/${props.branchId}/employees/${props.employeeId}`}
-            className="col-span-4 font-medium text-ink hover:text-orange"
+  if (editing) {
+    return (
+      <form
+        action={updateFormAction}
+        className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3"
+      >
+        <input type="hidden" name="branchId" value={props.branchId} />
+        <input type="hidden" name="employeeId" value={props.employeeId} />
+        <input
+          name="fullName"
+          defaultValue={props.fullName}
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-4 sm:py-1"
+        />
+        <input
+          name="title"
+          defaultValue={props.title ?? ""}
+          placeholder={t.title}
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
+        />
+        <div className="flex gap-2 sm:col-span-2">
+          <button
+            type="submit"
+            disabled={updatePending}
+            className="rounded-full bg-ink px-2.5 py-1 text-xs font-medium text-white hover:bg-orange disabled:opacity-50"
           >
-            {props.fullName}
-          </Link>
-          <span className="col-span-3 text-muted">{props.title ?? "—"}</span>
-          <span className="col-span-2">
-            {!props.isActive ? (
-              <span className="inline-flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-600">
-                {t.inactive}
-              </span>
-            ) : props.worstStatus ? (
-              <StatusBadge status={props.worstStatus} t={t} />
-            ) : null}
-          </span>
-        </>
-      )}
+            {updatePending ? t.saving : t.save}
+          </button>
+          <button
+            type="button"
+            onClick={() => setEditing(false)}
+            className="rounded-full border border-line px-2.5 py-1 text-xs font-medium text-ink"
+          >
+            {t.cancel}
+          </button>
+        </div>
+        {updateState.error && <p className="text-xs text-red-600 sm:col-span-12">{updateState.error}</p>}
+      </form>
+    );
+  }
 
-      {props.canEdit && !editing && (
-        <div className="col-span-3 flex justify-end gap-2">
+  return (
+    <div className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3">
+      <div className="flex items-center justify-between gap-2 sm:col-span-7 sm:contents">
+        <Link
+          href={`/branches/${props.branchId}/employees/${props.employeeId}`}
+          className="font-medium text-ink hover:text-orange sm:col-span-4"
+        >
+          {props.fullName}
+        </Link>
+        <span className="text-muted sm:col-span-3">{props.title ?? "—"}</span>
+      </div>
+      <span className="sm:col-span-2">
+        {!props.isActive ? (
+          <span className="inline-flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+            {t.inactive}
+          </span>
+        ) : props.worstStatus ? (
+          <StatusBadge status={props.worstStatus} t={t} />
+        ) : null}
+      </span>
+
+      {props.canEdit && (
+        <div className="flex justify-end gap-2 sm:col-span-3">
           <button
             type="button"
             onClick={() => setEditing(true)}
@@ -127,8 +133,6 @@ export function EmployeeRow(props: Props) {
           </form>
         </div>
       )}
-
-      {updateState.error && <p className="col-span-12 text-xs text-red-600">{updateState.error}</p>}
     </div>
   );
 }

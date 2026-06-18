@@ -39,35 +39,37 @@ export function CatalogRow(props: Props) {
     return (
       <form
         action={updateFormAction}
-        className="grid grid-cols-12 items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0"
+        className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3"
       >
         <input type="hidden" name="id" value={props.id} />
         <input
           name="nameEn"
           defaultValue={props.nameEn}
           placeholder={t.englishName}
-          className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
         />
         <input
           name="nameAr"
           dir="rtl"
           defaultValue={props.nameAr}
           placeholder={t.arabicName}
-          className="col-span-3 rounded-lg border border-line px-2 py-1 text-sm"
+          className="rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-3 sm:py-1"
         />
-        <input
-          name="displayOrder"
-          type="number"
-          defaultValue={props.displayOrder}
-          className="col-span-2 rounded-lg border border-line px-2 py-1 text-sm"
-        />
-        <input
-          name="defaultLeadTimeDays"
-          type="number"
-          defaultValue={props.defaultLeadTimeDays}
-          className="col-span-2 rounded-lg border border-line px-2 py-1 text-sm"
-        />
-        <div className="col-span-2 flex justify-end gap-2">
+        <div className="flex gap-2 sm:contents">
+          <input
+            name="displayOrder"
+            type="number"
+            defaultValue={props.displayOrder}
+            className="w-full rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-2 sm:py-1"
+          />
+          <input
+            name="defaultLeadTimeDays"
+            type="number"
+            defaultValue={props.defaultLeadTimeDays}
+            className="w-full rounded-lg border border-line px-2 py-1.5 text-sm sm:col-span-2 sm:py-1"
+          />
+        </div>
+        <div className="flex justify-end gap-2 sm:col-span-2">
           <button
             type="submit"
             disabled={updatePending}
@@ -83,31 +85,33 @@ export function CatalogRow(props: Props) {
             {t.cancel}
           </button>
         </div>
-        {updateState.error && <p className="col-span-12 text-xs text-red-600">{updateState.error}</p>}
+        {updateState.error && <p className="text-xs text-red-600 sm:col-span-12">{updateState.error}</p>}
       </form>
     );
   }
 
   return (
-    <div className="grid grid-cols-12 items-center gap-3 border-b border-line px-4 py-3 text-sm last:border-b-0">
-      <div className="col-span-3 flex flex-col">
+    <div className="flex flex-col gap-2 border-b border-line px-4 py-3 text-sm last:border-b-0 sm:grid sm:grid-cols-12 sm:items-center sm:gap-3">
+      <div className="flex flex-col sm:col-span-3">
         <span className={`font-medium ${props.isActive ? "text-ink" : "text-muted"}`}>{props.nameEn}</span>
         <span dir="rtl" className="text-xs text-muted">
           {props.nameAr}
         </span>
       </div>
-      <span className="col-span-3 text-muted">
-        {t.displayOrder}: {props.displayOrder}
-      </span>
-      <span className="col-span-2 text-muted">{props.defaultLeadTimeDays}d</span>
-      <span className="col-span-2">
+      <div className="flex items-center justify-between gap-2 text-muted sm:contents">
+        <span className="sm:col-span-3">
+          {t.displayOrder}: {props.displayOrder}
+        </span>
+        <span className="sm:col-span-2">{props.defaultLeadTimeDays}d</span>
+      </div>
+      <span className="sm:col-span-2">
         {!props.isActive && (
           <span className="inline-flex items-center rounded-full bg-gray-200 px-2.5 py-0.5 text-xs font-medium text-gray-600">
             {t.inactive}
           </span>
         )}
       </span>
-      <div className="col-span-2 flex justify-end gap-2">
+      <div className="flex justify-end gap-2 sm:col-span-2">
         <button
           type="button"
           onClick={() => setEditing(true)}
